@@ -1,0 +1,25 @@
+name: Smoke test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate marketplace.json is valid JSON
+        run: python3 -c "import json; json.load(open('.claude-plugin/marketplace.json'))"
+      - name: Validate plugin.json is valid JSON
+        run: python3 -c "import json; json.load(open('plugins/netsujo-aio/plugin.json'))"
+      - name: Validate SKILL.md frontmatter
+        run: |
+          for f in plugins/netsujo-aio/skills/*/SKILL.md; do
+            head -1 "$f" | grep -q '^---$' || (echo "Missing frontmatter in $f"; exit 1)
+            head -10 "$f" | grep -q '^name: ' || (echo "Missing name field in $f"; exit 1)
+            head -10 "$f" | grep -q '^description: ' || (echo "Missing description field in $f"; exit 1)
+          done
+          echo "All SKILL.md files have valid frontmatter"

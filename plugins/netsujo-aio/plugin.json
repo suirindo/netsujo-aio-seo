@@ -1,0 +1,24 @@
+{
+  "name": "netsujo-aio",
+  "version": "0.1.0",
+  "description": "Production-ready AIO/SEO toolkit for Next.js + Strapi + Japanese sites. Includes GSC weekly audit, JSON-LD generation, llms.txt creation, GA4 wiring, and 3-gate review (CTO/Designer/CEO).",
+  "author": {
+    "name": "Tomohiro Iida (Netsujo Inc.)",
+    "email": "t-iida@netsujo.jp",
+    "url": "https://netsujo.jp"
+  },
+  "repository": "https://github.com/suirindo/netsujo-aio-seo",
+  "license": "MIT",
+  "keywords": [
+    "seo",
+    "aio",
+    "geo",
+    "ai-search",
+    "structured-data",
+    "json-ld",
+    "llms-txt",
+    "nextjs",
+    "strapi",
+    "japanese"
+  ]
+}

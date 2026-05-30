@@ -1,0 +1,43 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/gh/anthropics/claude-code@main/packages/plugin-marketplace/marketplace.schema.json",
+  "name": "netsujo-aio-seo",
+  "description": "Production-ready AIO/SEO skills for Next.js, Strapi, and Japanese sites. Battle-tested on miyakodeit.com and netsujo.jp.",
+  "owner": {
+    "name": "Netsujo Inc.",
+    "url": "https://netsujo.jp"
+  },
+  "metadata": {
+    "homepage": "https://github.com/suirindo/netsujo-aio-seo",
+    "repository": "https://github.com/suirindo/netsujo-aio-seo"
+  },
+  "plugins": [
+    {
+      "name": "netsujo-aio",
+      "source": "./plugins/netsujo-aio",
+      "description": "AIO/SEO toolkit with GSC weekly audit, JSON-LD generation, llms.txt creation, GA4 wiring, and 3-gate review workflow. Specialized for Next.js App Router + Strapi v5 + Japanese (CJK) sites. Includes battle-tested patterns from miyakodeit.com and netsujo.jp.",
+      "version": "0.1.0",
+      "category": "seo",
+      "tags": [
+        "seo",
+        "aio",
+        "geo",
+        "nextjs",
+        "strapi",
+        "gsc",
+        "ga4",
+        "structured-data",
+        "json-ld",
+        "japanese",
+        "i18n"
+      ],
+      "author": {
+        "name": "Tomohiro Iida (Netsujo Inc.)",
+        "email": "t-iida@netsujo.jp",
+        "url": "https://netsujo.jp"
+      },
+      "homepage": "https://github.com/suirindo/netsujo-aio-seo",
+      "repository": "https://github.com/suirindo/netsujo-aio-seo",
+      "license": "MIT"
+    }
+  ]
+}
