@@ -1,7 +1,7 @@
 {
   "name": "netsujo-aio",
-  "version": "0.1.0",
-  "description": "Production-ready AIO/SEO toolkit for Next.js + Strapi + Japanese sites. Includes GSC weekly audit, JSON-LD generation, llms.txt creation, GA4 wiring, and 3-gate review (CTO/Designer/CEO).",
+  "version": "0.2.0",
+  "description": "Production-ready AIO/SEO toolkit for Next.js + Strapi + Japanese sites. 12 skills covering GSC weekly audit, full JSON-LD suite (FAQPage/Organization/Article/Event/Breadcrumb/Speakable), llms.txt for AI search, GA4 custom dimensions + tracking wiring, and Japanese-specific quality gates (H1 mobile break, ASCII↔CJK space).",
   "author": {
     "name": "Tomohiro Iida (Netsujo Inc.)",
     "email": "t-iida@netsujo.jp",

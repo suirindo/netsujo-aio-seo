@@ -14,8 +14,8 @@
     {
       "name": "netsujo-aio",
       "source": "./plugins/netsujo-aio",
-      "description": "AIO/SEO toolkit with GSC weekly audit, JSON-LD generation, llms.txt creation, GA4 wiring, and 3-gate review workflow. Specialized for Next.js App Router + Strapi v5 + Japanese (CJK) sites. Includes battle-tested patterns from miyakodeit.com and netsujo.jp.",
-      "version": "0.1.0",
+      "description": "12-skill AIO/SEO toolkit with GSC weekly audit, full JSON-LD suite (FAQPage/Organization/Article/Event/Breadcrumb/Speakable), llms.txt for AI search, GA4 custom dimensions + tracking wiring, and Japanese-specific quality gates. Battle-tested on miyakodeit.com and netsujo.jp.",
+      "version": "0.2.0",
       "category": "seo",
       "tags": [
         "seo",

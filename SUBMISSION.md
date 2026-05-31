@@ -1,12 +1,12 @@
 # Anthropic コミュニティマーケットプレイス申請手順
 
-**作成日**: 2026-05-30 / **最終更新**: 2026-05-31
+**作成日**: 2026-05-30 / **最終更新**: 2026-05-31(v0.2.0 12/12 skills 達成)
 **対象 repo**: https://github.com/suirindo/netsujo-aio-seo
 **申請先カタログ**: `anthropics/claude-plugins-community`（公式コミュニティカタログ）
 
 ---
 
-## 0. 事前 smoke test 結果（2026-05-31 実施）
+## 0. 事前 smoke test 結果（2026-05-31 実施・v0.2.0 12 skills）
 
 ローカル marketplace 経由でのインストール検証は **OK**。Claude Code v2.1.158 で確認。
 
@@ -18,17 +18,20 @@ $ claude plugin install netsujo-aio@netsujo-aio-seo --scope user
 ✔ Successfully installed plugin: netsujo-aio@netsujo-aio-seo
 
 $ claude plugin details netsujo-aio
-netsujo-aio 0.1.0
+netsujo-aio 0.2.0
   Component inventory
-    Skills (3)  gsc-weekly-audit, jsonld-faqpage, llms-txt-generator
+    Skills (12)  ga4-custom-dimensions, ga4-tracking-wiring, gsc-weekly-audit,
+                 h1-mobile-check, jp-ascii-space-fix, jsonld-article,
+                 jsonld-breadcrumb, jsonld-event, jsonld-faqpage,
+                 jsonld-organization, jsonld-speakable, llms-txt-generator
   Projected token cost
-    Always-on:   ~563 tok added to every session
+    Always-on:   ~2,521 tok added to every session
 
 $ claude plugin tag --dry-run ./plugins/netsujo-aio
-✔ Would create tag netsujo-aio--v0.1.0 at HEAD
+✔ Would create tag netsujo-aio--v0.2.0 at HEAD
 ```
 
-`plugin.json` / `marketplace.json` の整合性、SKILL.md フロントマター、トークンコスト試算すべて妥当。
+`plugin.json` / `marketplace.json` の整合性、SKILL.md フロントマター(12/12)、トークンコスト試算、Python syntax(12/12 scripts)すべて妥当。
 
 ---
 
@@ -57,9 +60,32 @@ Author email:        t-iida@netsujo.jp
 Author website:      https://netsujo.jp
 License:             MIT
 Category:            seo
+Version:             0.2.0
 
 Description:
-Production-tested AIO/SEO toolkit for Next.js + Strapi + Japanese sites. Battle-tested on miyakodeit.com (564 community members, 155+ events) and netsujo.jp. Includes GSC weekly audit (8 checks), JSON-LD generation with Schema.org validation, llms.txt generator for AI search optimization (GEO), and 3-gate review workflow (CTO/Designer/CEO subagents). Specialized for Japanese (CJK) sites with H1 mobile breaking rules, half-width space detection, and inLanguage:ja JSON-LD.
+Production-tested AIO/SEO toolkit (12 skills) for Next.js + Strapi + Japanese sites. Battle-tested on miyakodeit.com (564 community members, 155+ events) and netsujo.jp.
+
+Audit & diagnosis:
+- gsc-weekly-audit: Google Search Console comprehensive audit (8 checks, GitHub Actions weekly cron)
+
+Structured data (JSON-LD, full suite):
+- jsonld-faqpage: FAQPage with cross-page duplicate detection
+- jsonld-organization: Organization with sameAs auto-expansion + logo dimension validation
+- jsonld-article: Article / BlogPosting / NewsArticle subtype auto-detect + batch generation
+- jsonld-event: Event with Online/Offline/Mixed attendance modes
+- jsonld-breadcrumb: BreadcrumbList with Next.js App Router auto-derivation + XSS-safe inline JSON
+- jsonld-speakable: WebPage + SpeakableSpecification with llms.txt consistency verification
+
+AI search optimization (GEO):
+- llms-txt-generator: generate + verify llms.txt across 5 surfaces (Speakable, connpass, X bio)
+
+GA4 wiring:
+- ga4-custom-dimensions: register 12 standard dimensions via Admin API (idempotent)
+- ga4-tracking-wiring: scaffold trackCTAClick / trackOutboundLink / trackScrollDepth / trackReadComplete
+
+Japanese-specific quality gates:
+- h1-mobile-check: 375px H1 break detection with bunsetsu-aware <br /> suggestion
+- jp-ascii-space-fix: context-aware ASCII↔CJK half-width space remover
 
 Differentiation from claude-seo (AgriciDaniel):
 - claude-seo focuses on generic SEO auditing (any framework)
@@ -72,10 +98,15 @@ Battle-tested incidents (documented in BATTLE_TESTED.md):
 - 2026-05-22 cross-page FAQ duplication
 - 2026-05-24 Discovered, not indexed for 9 new routes
 - 2026-05-26 Japanese H1 mobile break
-- 2026-05-27 half-width space between ASCII and CJK
+- 2026-05-27 half-width space between ASCII and CJK (178 files, 1500+ replacements)
 
-Initial release: v0.1.0 (3 skills MVP)
-v0.2.0 planned: 12 skills including full JSON-LD suite + GA4 wiring
+Release timeline:
+- v0.1.0 (2026-05): 3 skills MVP
+- v0.2.0 (2026-05): 12 skills shipped — this submission
+- v0.3.x (2026-07+): three-gate-review / gsc-url-inspect / sitemap-resubmit
+- v1.0.0 (2026-10): netsujo-aio-strapi sub-package
+
+Token cost: ~2,521 tokens always-on per session (12 skills); on-invoke 2-3k per skill.
 ```
 
 ---
@@ -142,61 +173,24 @@ Anthropic team の審査項目:
 
 ---
 
-## 6. 申請のタイミング — **v0.2.0 完成まで待つ**（2026-05-31 飯田決定）
+## 6. 申請タイミング — **v0.2.0 達成・申請可能**(2026-05-31)
 
-| 観点 | v0.1.0 で出す | **v0.2.0 まで待つ（採用）** |
+| マイルストーン | 状態 | 日付 |
 |---|---|---|
-| 第一印象 | 3 skills のみ → 「まだ薄い」と見られるリスク | 12 skills → 十分なボリューム |
-| ユーザーフィードバック | 早期にもらえる | 遅れる |
-| 審査やり直しコスト | 0.1.0 で承認 → 0.2.0 で再審査の可能性 | 1 回で済む |
-| 競合プラグイン状況 | claude-seo はすでに 2.0 / 早めに棚に並ぶ価値 | 後出しになる |
-| 申請テキストの説得力 | 「3 skills MVP」「v0.2.0 で 12 skills 予定」 | 「12 skills、battle-tested」 |
+| v0.1.0 MVP(3 skills) | ✅ 完了 | 2026-05-30 |
+| v0.2.0 phase 1(7/12 skills) | ✅ merge 済 | 2026-05-31 |
+| **v0.2.0 phase 2(12/12 skills)** | ✅ **merge 済** | 2026-05-31 |
+| plugin.json/marketplace.json v0.2.0 bump | ✅ 本 PR | 2026-05-31 |
+| v0.2.0 git tag 作成 | ⏸ 飯田指示待ち | — |
+| 申請フォーム送信 | ⏸ 飯田手動 | — |
 
-**決定**: v0.2.0 完成（残り 9 skills 実装完了）まで申請を保留する。理由 = 第一印象とドキュメント説得力を最大化するため、3 skills の段階で出すより 12 skills で出す方が承認確度・初動拡散力ともに高い。
-
-申請直前に SUBMISSION.md §2 の Description 文も「Initial release: v0.2.0 (12 skills)」に書き換えること。
+申請に必要な要素はすべて揃っています。残るは git tag 作成と飯田さん手動でのフォーム送信のみ。
 
 ---
 
-## 7. v0.2.0 完成までにやること（申請までの準備期間）
+## 7. (旧 v0.2.0 開発ロードマップ — 完了済のため削除)
 
-### 7.1 v0.2.0 残り 9 skills 実装ロードマップ
-
-| カテゴリ | skill 名 | 元になる既存スクリプト/知見 | 優先度 |
-|---|---|---|---|
-| JSON-LD | jsonld-organization | netsujo-web の Organization JSON-LD + sameAs | 高 |
-| JSON-LD | jsonld-article | miyakodeit blog Article JSON-LD | 高 |
-| JSON-LD | jsonld-event | miyakodeit Event JSON-LD（Online/Offline/Mixed） | 中 |
-| JSON-LD | jsonld-breadcrumb | study-group-kyoto BreadcrumbList | 中 |
-| JSON-LD | jsonld-speakable | study-group-kyoto WebPage+Speakable | 中 |
-| GA4 | ga4-custom-dimensions | netsujo-web の 12 ディメンション登録手順 | 中 |
-| GA4 | ga4-tracking-wiring | `trackCTAClick` / `trackOutboundLink` 配線 | 中 |
-| 品質ゲート | h1-mobile-check | CLAUDE.md「見出しの改行ルール」+ 2026-04-08 事故 | 高 |
-| 品質ゲート | jp-ascii-space-fix | 2026-05-27 PR #67 perl バッチを skill 化 | 高 |
-| 品質ゲート | three-gate-review | netsujo-skills の `three-gate-review` 移植 | 中 |
-
-優先度「高」の 5 skills 先行 → β タグ v0.1.x で内部 dogfood → 残り 4 で v0.2.0 確定の流れを推奨。
-
-### 7.2 並行作業
-
-1. **v0.1.0 を miyakodeit / netsujo.jp で dogfooding**: 既存スクリプトを skill 経由で再実行し挙動差分を検証
-2. **README 英文校正**: 国際展開を考慮（v0.2.0 申請時の英文ドキュメント整備）
-3. **対外発信は v0.2.0 リリース後に集中**:
-   - X / note / Zenn で公開告知
-   - PR TIMES「Netsujo、京都発の AIO/SEO Claude Code Plugin を公開」
-   - みやこでITイベントで紹介 LT
-
-### 7.3 v0.1.0 タグは内部記録として作成しておく（任意）
-
-申請に出さなくても、v0.1.0 → v0.2.0 の差分を後から追えるよう git tag を打つ価値はある。
-
-```bash
-cd /Users/tomohiro/netsujo/netsujo-aio-seo
-claude plugin tag --push ./plugins/netsujo-aio
-# → netsujo-aio--v0.1.0 タグ作成 + origin に push
-```
-
-ただし飯田さんが「タグ作成も v0.2.0 完成まで保留」と判断するなら不要。
+v0.2.0 で実装した skills は §2 Description 内に記載。残り skills(three-gate-review / gsc-url-inspect / sitemap-resubmit)は v0.3.x にスライド。
 
 ---
 
@@ -236,15 +230,16 @@ OSS として広く使われれば公式入りしなくても価値は十分。
 
 ---
 
-## 11. 飯田さんアクションサマリ（v0.2.0 完成まで保留方針）
+## 11. 飯田さんアクションサマリ(申請可能ステータス)
 
-### 短期（v0.2.0 開発期間中）
-1. **§7.1 ロードマップ承認**: 9 skills 実装順の優先度判断
-2. **v0.1.0 タグ作成の要否判断**: 内部記録として打つか、v0.2.0 まで保留か
-3. **dogfooding 環境決定**: 既存 miyakodeit / netsujo.jp 運用に v0.1.0 を組み込む可否
+### 即実行可能
+1. **本 PR (release/v0.2.0-prep) merge**: plugin.json/marketplace.json v0.2.0 bump + SUBMISSION.md 最新化を本番反映(「merge して」明示で OK)
+2. **v0.2.0 タグ作成指示**: merge 完了後、秘書に「`claude plugin tag --push` 実行して」 → `netsujo-aio--v0.2.0` 作成 + origin push
+3. **GitHub Release 作成**: GitHub UI で `netsujo-aio--v0.2.0` を選んで Release 化(任意・推奨)
 
-### v0.2.0 完成直前
-4. **申請テキスト再レビュー**: §2 の Description を v0.2.0 仕様に書き換え（秘書がドラフト → 飯田さん最終確認）
-5. **v0.2.0 タグ作成指示**: 秘書に「`claude plugin tag --push` 実行して」
-6. **申請フォーム送信**: §1 の URL のうちどちらか → §2 のテキストを貼り付け
-7. 送信完了したら秘書に共有 → Discord 通知 + 観測スケジュール登録
+### 飯田さん手動(秘書では実行不可)
+4. **§2 Description 最終目視**: §2 の v0.2.0 申請テキストを最終確認
+5. **申請フォーム送信**: 下記いずれかにログインして §2 のテキストを貼り付け
+   - https://claude.ai/settings/plugins/submit
+   - https://platform.claude.com/plugins/submit
+6. **送信完了報告**: 秘書に共有 → Discord 通知 + 観測スケジュール登録(月次リマインド)
