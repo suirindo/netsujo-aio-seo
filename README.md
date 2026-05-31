@@ -5,7 +5,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-Plugin-blue)](https://claude.ai/claude-code)
-![Version](https://img.shields.io/badge/version-0.1.0-orange)
+![Version](https://img.shields.io/badge/version-0.2.0--dev-orange)
+![Skills](https://img.shields.io/badge/skills-7%2F12-blue)
 
 ## What this is
 
@@ -58,43 +59,44 @@ This runs:
 3. llms.txt consistency check
 4. CTR low pages report
 
-## Skills included (v0.1.0 MVP)
+## Skills included (7 skills shipped / 5 planned)
 
 ### Audit & diagnosis
 
 - **`gsc-weekly-audit`** — Google Search Console comprehensive audit (8 checks)
-- **`gsc-url-inspect`** *(v0.2)* — One-shot URL inspection for new routes
-- **`sitemap-resubmit`** *(v0.2)* — Submit sitemap.xml via Sitemaps API
+- **`gsc-url-inspect`** *(v0.2 planned)* — One-shot URL inspection for new routes
+- **`sitemap-resubmit`** *(v0.2 planned)* — Submit sitemap.xml via Sitemaps API
 
 ### Structured data (JSON-LD)
 
 - **`jsonld-faqpage`** — FAQPage JSON-LD with cross-page duplicate detection
-- **`jsonld-organization`** *(v0.2)* — Organization JSON-LD with sameAs auto-completion
-- **`jsonld-article`** *(v0.2)* — Article JSON-LD (datePublished/author/publisher)
-- **`jsonld-event`** *(v0.2)* — Event JSON-LD (Online/Offline/Mixed)
-- **`jsonld-breadcrumb`** *(v0.2)* — BreadcrumbList generation
-- **`jsonld-speakable`** *(v0.2)* — WebPage + SpeakableSpecification
+- **`jsonld-organization`** — Organization JSON-LD with sameAs auto-completion (logo dimension validation, Google rich results)
+- **`jsonld-article`** — Article / BlogPosting / NewsArticle JSON-LD (subtype auto-detect, ISO 8601 enforcement, batch generation)
+- **`jsonld-event`** *(v0.2 planned)* — Event JSON-LD (Online/Offline/Mixed)
+- **`jsonld-breadcrumb`** *(v0.2 planned)* — BreadcrumbList generation
+- **`jsonld-speakable`** *(v0.2 planned)* — WebPage + SpeakableSpecification
 
 ### AIO/GEO
 
 - **`llms-txt-generator`** — Generate + verify llms.txt for AI search citation
 
-### GA4 (v0.2)
+### GA4 *(v0.2 planned)*
 
 - **`ga4-custom-dimensions`** — Register 12 standard custom dimensions
 - **`ga4-tracking-wiring`** — Wire `trackCTAClick` / `trackOutboundLink`
 
-### Quality gates (v0.2)
+### Quality gates
 
-- **`h1-mobile-check`** — 375px H1 break validation
-- **`jp-ascii-space-fix`** — Remove half-width spaces between ASCII and CJK
-- **`three-gate-review`** — CTO / Designer / CEO subagent review
+- **`h1-mobile-check`** — 375px H1 break validation with bunsetsu-aware `<br />` suggestion
+- **`jp-ascii-space-fix`** — Context-aware remover of half-width spaces between ASCII and CJK (skips code blocks, HTML attributes)
+- **`three-gate-review`** *(v0.2 planned)* — CTO / Designer / CEO subagent review
 
 ## Roadmap
 
-- **v0.1.0** (2026-06): 3 skills MVP (this release)
-- **v0.2.0** (2026-07): 12 skills including JSON-LD suite + GA4 wiring
-- **v0.3.0** (2026-08): Anthropic claude-plugins-official submission
+- **v0.1.0** (2026-05): 3 skills MVP — gsc-weekly-audit / jsonld-faqpage / llms-txt-generator
+- **v0.2.0 phase 1** (2026-06, current): 7 skills total — adds jsonld-organization / jsonld-article / h1-mobile-check / jp-ascii-space-fix
+- **v0.2.0 phase 2** (2026-07): 12 skills total — adds 5 remaining (jsonld-event / jsonld-breadcrumb / jsonld-speakable / ga4-custom-dimensions / ga4-tracking-wiring / three-gate-review / gsc-url-inspect / sitemap-resubmit)
+- **v0.2.0 release** (2026-07): Anthropic claude-plugins-community submission
 - **v1.0.0** (2026-10): Production-ready with `netsujo-aio-strapi` sub-package
 
 ## Relationship to other plugins
