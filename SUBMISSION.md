@@ -142,37 +142,53 @@ Anthropic team の審査項目:
 
 ---
 
-## 6. 申請のタイミング — v0.1.0 で出すか v0.2.0 まで待つか
+## 6. 申請のタイミング — **v0.2.0 完成まで待つ**（2026-05-31 飯田決定）
 
-| 観点 | v0.1.0 で出す | v0.2.0 まで待つ |
+| 観点 | v0.1.0 で出す | **v0.2.0 まで待つ（採用）** |
 |---|---|---|
 | 第一印象 | 3 skills のみ → 「まだ薄い」と見られるリスク | 12 skills → 十分なボリューム |
 | ユーザーフィードバック | 早期にもらえる | 遅れる |
 | 審査やり直しコスト | 0.1.0 で承認 → 0.2.0 で再審査の可能性 | 1 回で済む |
 | 競合プラグイン状況 | claude-seo はすでに 2.0 / 早めに棚に並ぶ価値 | 後出しになる |
+| 申請テキストの説得力 | 「3 skills MVP」「v0.2.0 で 12 skills 予定」 | 「12 skills、battle-tested」 |
 
-**推奨**: v0.1.0 で申請し、審査期間中に v0.2.0 を開発。承認後 v0.2.0 push でカタログピン自動更新（マニフェストの CI 説明と整合）。
+**決定**: v0.2.0 完成（残り 9 skills 実装完了）まで申請を保留する。理由 = 第一印象とドキュメント説得力を最大化するため、3 skills の段階で出すより 12 skills で出す方が承認確度・初動拡散力ともに高い。
+
+申請直前に SUBMISSION.md §2 の Description 文も「Initial release: v0.2.0 (12 skills)」に書き換えること。
 
 ---
 
-## 7. 並行で実施すべきこと（審査期間中）
+## 7. v0.2.0 完成までにやること（申請までの準備期間）
 
-1. **v0.1.0 を miyakodeit / netsujo.jp で dogfooding**
-   - 既存スクリプトを skill 経由で再実行して整合性確認
-   - 不足機能を v0.2.0 ロードマップに追加
-2. **対外発信**
+### 7.1 v0.2.0 残り 9 skills 実装ロードマップ
+
+| カテゴリ | skill 名 | 元になる既存スクリプト/知見 | 優先度 |
+|---|---|---|---|
+| JSON-LD | jsonld-organization | netsujo-web の Organization JSON-LD + sameAs | 高 |
+| JSON-LD | jsonld-article | miyakodeit blog Article JSON-LD | 高 |
+| JSON-LD | jsonld-event | miyakodeit Event JSON-LD（Online/Offline/Mixed） | 中 |
+| JSON-LD | jsonld-breadcrumb | study-group-kyoto BreadcrumbList | 中 |
+| JSON-LD | jsonld-speakable | study-group-kyoto WebPage+Speakable | 中 |
+| GA4 | ga4-custom-dimensions | netsujo-web の 12 ディメンション登録手順 | 中 |
+| GA4 | ga4-tracking-wiring | `trackCTAClick` / `trackOutboundLink` 配線 | 中 |
+| 品質ゲート | h1-mobile-check | CLAUDE.md「見出しの改行ルール」+ 2026-04-08 事故 | 高 |
+| 品質ゲート | jp-ascii-space-fix | 2026-05-27 PR #67 perl バッチを skill 化 | 高 |
+| 品質ゲート | three-gate-review | netsujo-skills の `three-gate-review` 移植 | 中 |
+
+優先度「高」の 5 skills 先行 → β タグ v0.1.x で内部 dogfood → 残り 4 で v0.2.0 確定の流れを推奨。
+
+### 7.2 並行作業
+
+1. **v0.1.0 を miyakodeit / netsujo.jp で dogfooding**: 既存スクリプトを skill 経由で再実行し挙動差分を検証
+2. **README 英文校正**: 国際展開を考慮（v0.2.0 申請時の英文ドキュメント整備）
+3. **対外発信は v0.2.0 リリース後に集中**:
    - X / note / Zenn で公開告知
    - PR TIMES「Netsujo、京都発の AIO/SEO Claude Code Plugin を公開」
    - みやこでITイベントで紹介 LT
-3. **v0.2.0 開発**（残り 9 skills）
-   - JSON-LD 系 5（organization / article / event / breadcrumb / speakable）
-   - GA4 配線系 2（custom-dimensions / tracking-wiring）
-   - 品質ゲート系 3（h1-mobile-check / jp-ascii-space-fix / three-gate-review）
-4. **README 英文校正**（国際展開を考慮）
 
----
+### 7.3 v0.1.0 タグは内部記録として作成しておく（任意）
 
-## 8. v0.1.0 タグ作成手順（飯田さん承認後に実施）
+申請に出さなくても、v0.1.0 → v0.2.0 の差分を後から追えるよう git tag を打つ価値はある。
 
 ```bash
 cd /Users/tomohiro/netsujo/netsujo-aio-seo
@@ -180,7 +196,24 @@ claude plugin tag --push ./plugins/netsujo-aio
 # → netsujo-aio--v0.1.0 タグ作成 + origin に push
 ```
 
-GitHub Releases で `netsujo-aio--v0.1.0` を選んで Release 化すると、コミュニティカタログ CI が SHA ピンを更新しやすくなる。
+ただし飯田さんが「タグ作成も v0.2.0 完成まで保留」と判断するなら不要。
+
+---
+
+## 8. v0.2.0 タグ作成手順（申請直前）
+
+v0.2.0 が完成し、申請テキストを書き換えた後に実行:
+
+```bash
+cd /Users/tomohiro/netsujo/netsujo-aio-seo
+# (1) plugin.json と marketplace.json の version を 0.2.0 に書き換え
+# (2) コミット
+# (3) タグ作成 + push
+claude plugin tag --push ./plugins/netsujo-aio
+# → netsujo-aio--v0.2.0 タグ作成 + origin に push
+```
+
+GitHub Releases で `netsujo-aio--v0.2.0` を選んで Release 化すると、コミュニティカタログ CI が SHA ピンを更新しやすくなる。
 
 ---
 
@@ -203,10 +236,15 @@ OSS として広く使われれば公式入りしなくても価値は十分。
 
 ---
 
-## 11. 飯田さんアクションサマリ
+## 11. 飯田さんアクションサマリ（v0.2.0 完成まで保留方針）
 
-1. **このリポジトリの最終目視確認**: README / SETUP / BATTLE_TESTED / plugin.json / 3 SKILL.md
-2. **v0.1.0 で出すか v0.2.0 まで待つかの判断**（§6 推奨は v0.1.0）
-3. （v0.1.0 で出す場合）**v0.1.0 タグ作成指示**: 秘書に「`claude plugin tag --push` 実行して」
-4. **申請フォーム送信**: §1 の URL のうちどちらか → §2 のテキストを貼り付け
-5. 送信完了したら秘書に共有 → Discord 通知 + 観測スケジュール登録
+### 短期（v0.2.0 開発期間中）
+1. **§7.1 ロードマップ承認**: 9 skills 実装順の優先度判断
+2. **v0.1.0 タグ作成の要否判断**: 内部記録として打つか、v0.2.0 まで保留か
+3. **dogfooding 環境決定**: 既存 miyakodeit / netsujo.jp 運用に v0.1.0 を組み込む可否
+
+### v0.2.0 完成直前
+4. **申請テキスト再レビュー**: §2 の Description を v0.2.0 仕様に書き換え（秘書がドラフト → 飯田さん最終確認）
+5. **v0.2.0 タグ作成指示**: 秘書に「`claude plugin tag --push` 実行して」
+6. **申請フォーム送信**: §1 の URL のうちどちらか → §2 のテキストを貼り付け
+7. 送信完了したら秘書に共有 → Discord 通知 + 観測スケジュール登録
