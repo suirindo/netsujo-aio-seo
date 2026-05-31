@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-Plugin-blue)](https://claude.ai/claude-code)
 ![Version](https://img.shields.io/badge/version-0.2.0--dev-orange)
-![Skills](https://img.shields.io/badge/skills-7%2F12-blue)
+![Skills](https://img.shields.io/badge/skills-12%2F12-brightgreen)
 
 ## What this is
 
@@ -59,44 +59,48 @@ This runs:
 3. llms.txt consistency check
 4. CTR low pages report
 
-## Skills included (7 skills shipped / 5 planned)
+## Skills included (12 shipped)
 
 ### Audit & diagnosis
 
 - **`gsc-weekly-audit`** — Google Search Console comprehensive audit (8 checks)
-- **`gsc-url-inspect`** *(v0.2 planned)* — One-shot URL inspection for new routes
-- **`sitemap-resubmit`** *(v0.2 planned)* — Submit sitemap.xml via Sitemaps API
 
 ### Structured data (JSON-LD)
 
 - **`jsonld-faqpage`** — FAQPage JSON-LD with cross-page duplicate detection
-- **`jsonld-organization`** — Organization JSON-LD with sameAs auto-completion (logo dimension validation, Google rich results)
-- **`jsonld-article`** — Article / BlogPosting / NewsArticle JSON-LD (subtype auto-detect, ISO 8601 enforcement, batch generation)
-- **`jsonld-event`** *(v0.2 planned)* — Event JSON-LD (Online/Offline/Mixed)
-- **`jsonld-breadcrumb`** *(v0.2 planned)* — BreadcrumbList generation
-- **`jsonld-speakable`** *(v0.2 planned)* — WebPage + SpeakableSpecification
+- **`jsonld-organization`** — Organization JSON-LD with sameAs auto-completion + logo dimension validation
+- **`jsonld-article`** — Article / BlogPosting / NewsArticle JSON-LD with Google rich results validation + batch generation
+- **`jsonld-event`** — Event JSON-LD with Online / Offline / Mixed attendance modes
+- **`jsonld-breadcrumb`** — BreadcrumbList JSON-LD with Next.js App Router `usePathname` auto-derivation
+- **`jsonld-speakable`** — WebPage + SpeakableSpecification with llms.txt consistency verification
 
 ### AIO/GEO
 
 - **`llms-txt-generator`** — Generate + verify llms.txt for AI search citation
 
-### GA4 *(v0.2 planned)*
+### GA4
 
-- **`ga4-custom-dimensions`** — Register 12 standard custom dimensions
-- **`ga4-tracking-wiring`** — Wire `trackCTAClick` / `trackOutboundLink`
+- **`ga4-custom-dimensions`** — Register 12 standard custom dimensions via Admin API (idempotent)
+- **`ga4-tracking-wiring`** — Scaffold `trackCTAClick` / `trackOutboundLink` / `trackScrollDepth` / `trackReadComplete` for Next.js App Router
 
 ### Quality gates
 
-- **`h1-mobile-check`** — 375px H1 break validation with bunsetsu-aware `<br />` suggestion
+- **`h1-mobile-check`** — 375px H1 break detection with bunsetsu-aware `<br />` suggestion
 - **`jp-ascii-space-fix`** — Context-aware remover of half-width spaces between ASCII and CJK (skips code blocks, HTML attributes)
-- **`three-gate-review`** *(v0.2 planned)* — CTO / Designer / CEO subagent review
+
+### Planned for v0.3.x
+
+- `three-gate-review` — CTO / Designer / CEO subagent review
+- `gsc-url-inspect` — One-shot URL inspection for new routes
+- `sitemap-resubmit` — Submit sitemap.xml via Sitemaps API
 
 ## Roadmap
 
 - **v0.1.0** (2026-05): 3 skills MVP — gsc-weekly-audit / jsonld-faqpage / llms-txt-generator
-- **v0.2.0 phase 1** (2026-06, current): 7 skills total — adds jsonld-organization / jsonld-article / h1-mobile-check / jp-ascii-space-fix
-- **v0.2.0 phase 2** (2026-07): 12 skills total — adds 5 remaining (jsonld-event / jsonld-breadcrumb / jsonld-speakable / ga4-custom-dimensions / ga4-tracking-wiring / three-gate-review / gsc-url-inspect / sitemap-resubmit)
-- **v0.2.0 release** (2026-07): Anthropic claude-plugins-community submission
+- **v0.2.0 phase 1** (2026-05): 7 skills — adds jsonld-organization / jsonld-article / h1-mobile-check / jp-ascii-space-fix
+- **v0.2.0 phase 2** (2026-05, **current**): **12 skills** — adds jsonld-event / jsonld-breadcrumb / jsonld-speakable / ga4-custom-dimensions / ga4-tracking-wiring
+- **v0.2.0 release** (2026-06): Anthropic claude-plugins-community submission
+- **v0.3.x** (2026-07+): three-gate-review / gsc-url-inspect / sitemap-resubmit
 - **v1.0.0** (2026-10): Production-ready with `netsujo-aio-strapi` sub-package
 
 ## Relationship to other plugins
