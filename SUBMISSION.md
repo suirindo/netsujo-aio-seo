@@ -109,6 +109,20 @@ Release timeline:
 Token cost: ~2,521 tokens always-on per session (12 skills); on-invoke 2-3k per skill.
 ```
 
+### 2.1 Example use cases フィールド(申請フォーム別欄)
+
+```
+Example 1: A Next.js + Strapi team running a Japanese community site uses gsc-weekly-audit to run a comprehensive Google Search Console audit (sitemap status, URL inspection, canonical mismatch, CTR low pages) and post a Discord summary every Monday morning via GitHub Actions cron — catching incidents like fake sitemap entries or "Discovered, not indexed" within hours instead of days.
+
+Example 2: A developer adding a new FAQ section to a blog uses jsonld-faqpage --check-duplicates to generate FAQPage JSON-LD that automatically detects duplicate questions across other pages on the same domain and refuses to ship until SEO-targeted rewrites are made — preventing the "Google picks one or drops both" rich-result loss.
+
+Example 3: A content team wants ChatGPT and Perplexity to recommend their site for queries like "京都 IT勉強会". They use llms-txt-generator to produce llms.txt and jsonld-speakable to add WebPage+SpeakableSpecification JSON-LD, with --verify ensuring both surfaces have identical definition text, llms.txt is consistent with the connpass group description and X bio.
+
+Example 4: A Japanese site owner notices H1 headings breaking awkwardly on mobile. They run h1-mobile-check --url https://example.com/page which renders the page at 375px iPhone SE width, detects mid-particle splits (e.g. 助詞「を」at line head) and verb-mid breaks, then suggests <br /> insertion at bunsetsu (grammatical phrase) boundaries.
+
+Example 5: A team migrating legacy content discovers inconsistent spacing between English and Japanese text (e.g. "Vercel デプロイ" vs "Vercelデプロイ"). They run jp-ascii-space-fix --scan ./docs --apply which removes half-width spaces at ASCII↔CJK boundaries while preserving spaces in fenced code blocks, HTML attributes, and Markdown list markers — unlike a naive perl one-liner that would corrupt those.
+```
+
 ---
 
 ## 3. 申請前ローカル検証コマンド
