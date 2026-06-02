@@ -1,7 +1,7 @@
 {
   "name": "netsujo-aio",
-  "version": "0.2.0",
-  "description": "Production-ready AIO/SEO toolkit for Next.js + Strapi + Japanese sites. 12 skills covering GSC weekly audit, full JSON-LD suite (FAQPage/Organization/Article/Event/Breadcrumb/Speakable), llms.txt for AI search, GA4 custom dimensions + tracking wiring, and Japanese-specific quality gates (H1 mobile break, ASCII↔CJK space).",
+  "version": "0.3.0",
+  "description": "Production-ready AIO/SEO toolkit for Next.js + Strapi + Japanese sites. 16 skills covering GSC weekly audit, full JSON-LD suite (FAQPage/Organization/Article/Event/Breadcrumb/Speakable), llms.txt for AI search, GA4 custom dimensions + tracking wiring, Japanese-specific quality gates (H1 mobile break, ASCII↔CJK space), AI citation tracking (ChatGPT/Perplexity/Gemini/AI Overview), Bing IndexNow submission, passage citability scoring (CMU GEO framework), and indexation recovery for Discovered/Crawled-not-indexed pages.",
   "author": {
     "name": "Tomohiro Iida (Netsujo Inc.)",
     "email": "t-iida@netsujo.jp",
@@ -14,6 +14,13 @@
     "aio",
     "geo",
     "ai-search",
+    "ai-citation",
+    "chatgpt-search",
+    "perplexity",
+    "ai-overview",
+    "bing-indexnow",
+    "indexation-recovery",
+    "passage-citability",
     "structured-data",
     "json-ld",
     "llms-txt",
