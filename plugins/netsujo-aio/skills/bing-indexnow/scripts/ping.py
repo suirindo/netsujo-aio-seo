@@ -29,15 +29,16 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-# XXE / billion-laughs 対策で defusedxml を優先(arbitrary URL を parse する可能性があるため)
+# XXE / billion-laughs 対策で defusedxml を必須化(fallback禁止・fail fast)
 try:
     import defusedxml.ElementTree as ET  # type: ignore
 except ImportError:
     print(
-        "WARNING: defusedxml not installed. Install with `pip install defusedxml` for XXE protection.",
+        "ERROR: defusedxml is required for safe XML parsing. "
+        "Install with: pip install defusedxml",
         file=sys.stderr,
     )
-    import xml.etree.ElementTree as ET  # nosec - 内部 trusted sitemap のみで使用
+    sys.exit(2)
 
 
 ENDPOINT = "https://api.indexnow.org/IndexNow"
