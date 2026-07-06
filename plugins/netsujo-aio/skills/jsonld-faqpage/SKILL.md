@@ -22,6 +22,10 @@ Production-ready FAQPage JSON-LD with React component output, duplicate-question
 - After moving FAQ content between pages (canonical migration)
 - Before Google Rich Results Test submission
 
+## 位置づけ（2026-05-07 以降）
+
+FAQ リッチリザルト表示は 2026-05-07 に deprecated（`netsujo-aio:schema-validator` は FAQPage を WARN 扱い）。**現在の主目的は AI 引用（AIO/GEO）**で、SERP のリッチリザルト獲得を成果として約束しない。schema 自体は valid であり続けるため生成・維持は継続する。
+
 ## Critical Google constraints
 
 Per [Google FAQPage guidelines](https://developers.google.com/search/docs/appearance/structured-data/faqpage):
@@ -35,6 +39,8 @@ Per [Google FAQPage guidelines](https://developers.google.com/search/docs/appear
 This skill enforces all 5 at generation time.
 
 ## Usage
+
+> **実装状態**: `scripts/jsonld-faqpage.py` は未同梱。以下の CLI 例は**入出力仕様**として読み、Claude が YAML→JSON-LD/React 変換・重複検出・検証を直接実行する。スクリプト化する場合はこの仕様に従う。
 
 ### Generate JSON-LD only
 
@@ -149,12 +155,10 @@ The "no duplicates between pages" rule is enforced by `--check-duplicates`.
 | inLanguage | ja | BCP-47 language tag |
 | Strict mode | true | Fail on Warning level issues |
 
-## Reference files
+## Reference implementations
 
-- `references/faqpage-schema-spec.md` — Full Schema.org spec excerpts with examples
-- `references/rich-results-test.md` — How to test in Google Rich Results Test
-- `references/cross-page-strategy.md` — How to avoid duplicates while ranking multiple FAQ pages
-- `scripts/jsonld-faqpage.py` — Generator
+- 実例: miyakodeit.com の FAQPage schema（6カテゴリ・31問で運用中）
+- 検証: Google Rich Results Test（https://search.google.com/test/rich-results）に本番URLを投入して確認
 
 ## Related skills
 

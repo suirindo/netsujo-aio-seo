@@ -1,6 +1,6 @@
 ---
 name: pre-merge-test-suite
-description: Orchestrate full test suite before merging any PR. Runs link-integrity-tester + content-fact-validator + schema-validator + build/lint/test in sequence, plus visual diff on changed routes. Must be run on every PR that modifies user-facing pages, schemas, or content data. Returns aggregated pass/fail report with merge recommendation. Use when user says "test before merge", "pre-merge", "test all", "徹底テスト", "merge前確認", or when about to claim "ready to merge".
+description: Use when about to claim a PR is "ready to merge", before any "merge して" request, or when user says "test before merge", "pre-merge", "test all", "徹底テスト", "merge前確認". Required for every PR that modifies user-facing pages, JSON-LD schemas, links/CTAs, metadata, llms.txt, or content data files.
 ---
 
 # Pre-Merge Test Suite
@@ -24,7 +24,8 @@ Runs the following stages **in order**. Failure at any stage blocks subsequent s
 - `npm run build` exits 0
 - `npm run lint` exits 0 (warnings OK, errors not)
 - `tsc --noEmit` exits 0
-- All affected file have valid syntax
+- `npm run test` exits 0 (Vitest — skip only if the repo has no test script)
+- All affected files have valid syntax
 
 ### Stage 1: content-fact-validator
 - Parse `git diff main` for factual claims in changed files
@@ -84,7 +85,9 @@ Runs the following stages **in order**. Failure at any stage blocks subsequent s
 > PR #109 を merge する前に pre-merge-test-suite
 ```
 
-Suite runs all 5 stages, returns aggregated verdict. Only if all PASS, present "ready to merge" to owner.
+Suite runs Stages 0-4 pre-merge and returns the aggregated verdict（Stage 5 は merge 後に別途実行）。Only if Stages 0-4 all PASS, present "ready to merge" to owner.
+
+**PASS ≠ merge 実行。** merge は飯田さんの明示指示（「merge して」等）後に行う。オーナーへの完了報告前には別途 codex QC（ルートCLAUDE.md）を通す。このスイートはテストのオーケストレーターであり、承認フローを代替しない。
 
 ### Pattern 2: Auto-trigger on commit
 

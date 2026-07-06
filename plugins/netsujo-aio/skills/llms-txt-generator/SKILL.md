@@ -40,6 +40,8 @@ This skill ensures all 5 are consistent.
 
 ## Usage
 
+> **実装状態**: `scripts/llms-txt-generator.py` は未同梱。以下の CLI 例は**入出力仕様**として読み、Claude がサイト解析→llms.txt 生成→整合検証を直接実行する（Read/WebFetch/Write）。スクリプト化する場合はこの仕様に従う。
+
 ### Generate llms.txt from site analysis
 
 ```bash
@@ -127,18 +129,14 @@ This skill encodes the `miyakodeit.com` llms.txt structure that achieved real Ch
 | Include blog posts | false | Set true for content sites |
 | Multi-language | single | "single" or "split" (separate /en/llms.txt) |
 
-## Reference files
+## Reference implementations
 
-- `references/llms-txt-spec.md` — Anthropic-style llms.txt format spec
-- `references/ai-search-platforms.md` — Per-platform optimization (ChatGPT/Perplexity/Gemini/AI Overviews)
-- `references/speakable-consistency.md` — How to align Speakable with llms.txt
-- `references/example-llms-txt.md` — Real example from miyakodeit.com
-- `scripts/llms-txt-generator.py` — Main generator
-- `scripts/llms-txt-verify.py` — Cross-surface consistency checker
+- 実例: `miyakodeit/public/llms.txt` / `public/llms-full.txt`（ChatGPT「京都 IT 勉強会」で引用実績）
+- 実例: `netsujo-web/public/llms.txt`
 
 ## Related skills
 
-- `netsujo-aio:jsonld-speakable` — WebPage + SpeakableSpecification JSON-LD (paired)
-- `netsujo-aio:ai-definition-placement` — Place Speakable definition on multiple pages
+- `netsujo-aio:jsonld-speakable` — WebPage + SpeakableSpecification JSON-LD (paired; llms.txt との整合検証を含む)
+- `netsujo-aio:passage-citability-checker` — 冒頭パッセージの AI 引用適性スコアリング
 - `claude-seo:seo-geo` — Broader GEO analysis (AI citation readiness scoring)
 - `claude-seo:seo-content` — E-E-A-T for AI citability

@@ -1,6 +1,6 @@
 ---
 name: schema-validator
-description: Validate every JSON-LD block on a page or in a diff against schema.org spec and Google Rich Results Test API. Detects malformed structured data, missing required properties, deprecated types (e.g. FAQPage post 2026-05-07), and ensures Person/Course/Organization graphs cross-reference correctly via @id. Use when user says "schema validation", "JSON-LD check", "structured data", "rich results test", "schema.org valid", "construction validation", "graph integrity", or BEFORE merging any PR that adds/modifies JSON-LD components.
+description: Use when user says "schema validation", "JSON-LD check", "structured data", "rich results test", "schema.org valid", "graph integrity", when a build passes but structured data correctness is unverified, or BEFORE merging any PR that adds/modifies JSON-LD components (JsonLd component, dangerouslySetInnerHTML with application/ld+json).
 ---
 
 # Schema Validator
@@ -52,7 +52,7 @@ For each `<script type="application/ld+json">` block on the page:
 ## Critical rules (enforced)
 
 - **safeJsonLd() wrapper required** for `dangerouslySetInnerHTML` — `</script>` escape must be applied. Detect bare `JSON.stringify` without escape
-- **No optional chaining without fallback** for required schema fields — `description: post?.excerpt` will emit `description: undefined` which serializes to JSON `"description"` key with missing value
+- **No optional chaining without fallback** for required schema fields — `description: post?.excerpt` が `undefined` になると `JSON.stringify` はそのキーごと**黙って省略**し、必須フィールドがエラーなしで欠落する
 - **Date strings must be ISO 8601** — `2024.05.14` is not valid; `2024-05-14` is
 - **CourseInstance.location required** when emitting Course schema
 - **Use `schema:` URL prefix** for property names in `@type` (auto-handled by schema.org context but warn on legacy patterns)
