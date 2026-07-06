@@ -31,7 +31,7 @@ Production-ready GA4 event wiring for Next.js App Router. Generates a typed `win
 | `trackScrollDepth(percent)` | `scroll_depth` | `percent_scrolled` (25/50/75/100) | `<ScrollDepthTracker />` IntersectionObserver |
 | `trackReadComplete(articleSlug)` | `read_complete` | `article_slug` | `<ReadCompleteTracker />` 90% scroll + 30s dwell |
 
-All four are mapped to GA4 custom dimensions registered by the `ga4-custom-dimensions` skill (recommended prerequisite, but not required to run this skill).
+**パラメータ名はサイトごとに異なる**（miyakodeit の `lib/analytics.ts` は `event_label` / `article_slug` 系、netsujo-web は `cta_label` 系）。配線前に必ず対象サイトの既存 analytics 実装と `ga4-custom-dimensions` の登録済み parameterName を突合すること — **送信名と登録名が一致しないとカスタムディメンションにデータが入らない**（バックフィルもされない）。
 
 ## Prerequisites
 
@@ -195,5 +195,4 @@ Critical issues abort apply. Warnings are printed but do not block.
 ## Related skills
 
 - `netsujo-aio:ga4-custom-dimensions` — Register 12 custom dimensions in GA4 (prerequisite)
-- `netsujo-aio:ga4-funnel-explore` — Build funnel explorations on the events this skill emits
 - `claude-seo:seo-google` — GA4 organic traffic reporting via API

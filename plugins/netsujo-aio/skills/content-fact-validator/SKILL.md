@@ -1,6 +1,6 @@
 ---
 name: content-fact-validator
-description: Before propagating any factual claim (achievements, dates, places, organizations, statistics) from an existing data file into new schemas/bios/copy, cross-reference the claim against authoritative sources (Strapi articles, connpass URLs, Wikipedia, official sites). Catches fabricated or stale data being amplified. Use when user says "fact check", "事実確認", "原典確認", "verify claim", "propagate data", or BEFORE editing achievements/awards/lectures/affiliations in authors-fallback.ts / Person schema / bio strings. Triggered by the 2026-06-04 fabrication incident where "公立はこだて未来大学講義" was propagated across 3 schemas before discovery.
+description: Use when user says "fact check", "事実確認", "原典確認", "verify claim", "propagate data", or BEFORE editing achievements/awards/lectures/affiliations/bios/statistics in authors-fallback.ts, site-facts.ts, community-stats-constants.ts, Person/Course/Organization schemas, or any copy that states facts about people or organizations. Also use when copying "existing" data from one file into a new page or schema — existing data is NOT presumed verified.
 ---
 
 # Content Fact Validator
@@ -39,10 +39,12 @@ For each factual claim being added or propagated:
 
 1. **Parse the change** (git diff or proposed write) to extract new factual claims
 2. **For each claim, determine the appropriate canonical source**:
+   - Netsujo 社の事実（役職・登記・認証・R&D状態） → `netsujo-web` の `site-facts.ts`（`check:facts` CI）+ memory `project_netsujo_confirmed_facts.md`
+   - みやこでIT の事実（発足年・会場・統計） → `community-stats-constants.ts` + memory `project_miyakodeit_confirmed_facts.md`
    - Speaker / lecture → Strapi article search via slug heuristic + Web search
    - Award → official issuing org URL
    - Company/Organization affiliation → official membership page or press release
-   - Statistic → `community-stats-constants.ts` + sync source
+   - 人物の経歴・資格 → 本人確認または一次出典が無ければ**書かない**（memory `feedback_no_fabricated_credentials.md` / 2026-06-18「代表が元医師」虚偽事故）
 3. **Fetch the canonical source** (WebFetch / Strapi API)
 4. **Compare claim vs. source** on key fields
 5. **Output** — for each claim: PASS (with source URL), WARN (couldn't verify), or FAIL (mismatch detected)

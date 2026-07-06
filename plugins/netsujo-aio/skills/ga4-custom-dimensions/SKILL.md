@@ -41,17 +41,19 @@ Production-ready GA4 Admin API client that registers the 12 standard custom dime
 
 Full catalog with GTM wiring lives in `references/dimensions-catalog.md`.
 
+**注意**: この12個は標準テンプレート。実サイトが送信しているパラメータ名（例: miyakodeit の `lib/analytics.ts` は `event_label` / `article_slug` 系）と一致する名前で登録すること。送信名と登録名が不一致だとデータは入らない。
+
 ## Critical GA4 constraints
 
 Per [GA4 Admin API docs](https://developers.google.com/analytics/devguides/config/admin/v1):
 
 1. **Scope is immutable** — once registered, `event` cannot be changed to `user`. The skill warns before apply.
-2. **Hard cap of 50 event-scoped + 25 user-scoped + 10 item-scoped per property** — the skill counts remaining slots before applying.
+2. **Hard cap of 50 event-scoped + 25 user-scoped + 10 item-scoped per property** — apply 前に `--list` で既存数を確認する（残枠の自動カウントはスクリプト未実装）。
 3. **`parameterName` is unique per scope** — registering `cta_label` twice as event-scoped is rejected. The skill matches on `(parameterName, scope)` to dedupe.
-4. **Display name must be unique across all scopes** — the skill prefixes display names with scope tag when conflict detected.
+4. **Display name must be unique across all scopes** — 衝突時は display name に scope タグを付けて手動で回避する（自動 prefix はスクリプト未実装）。
 5. **Data flows only after registration** — events fired before the dimension is registered will not back-fill.
 
-This skill enforces all 5 at apply time.
+1・3 はスクリプトが検出して enforce する（conflict 時 exit 2・書き込みなし）。2・4 は運用で確認する。
 
 ## Prerequisites
 
@@ -61,7 +63,7 @@ This skill enforces all 5 at apply time.
    - `GA4_PROPERTY_ID` — default property when `--property` is omitted
    - `GOOGLE_APPLICATION_CREDENTIALS` — path to service account JSON
 
-See `references/setup.md` (shared with other GA4 skills) for service account provisioning.
+サービスアカウント発行手順・接続情報は memory `reference_gsc_mcp.md`（GA4 ID: 531238165）と `reference_netsujo_analytics.md`（property 382871067）を参照。
 
 ## Usage
 
@@ -136,7 +138,7 @@ The script treats two dimensions as equal when both `parameterName` and `scope` 
 
 | Mode | Exit code | Behavior |
 |---|---|---|
-| `--dry-run` (default) | 0 always | Prints plan, no API writes |
+| `--dry-run` (default) | 0（conflict 検出時は 2） | Prints plan, no API writes |
 | `--apply` | 0 on success | Creates missing dimensions, prints diff |
 | `--apply` with conflict | 2 | Prints conflict, no writes |
 | `--list` | 0 | Prints existing dimensions as a table |
@@ -168,5 +170,4 @@ The script treats two dimensions as equal when both `parameterName` and `scope` 
 ## Related skills
 
 - `netsujo-aio:ga4-tracking-wiring` (next) — Wires GTM dataLayer pushes to the dimensions this skill registered
-- `netsujo-aio:ga4-conversion-events` — Marks conversion events that use these dimensions
 - `claude-seo:seo-google` — Reads GA4 organic traffic; benefits from these dimensions being populated

@@ -53,8 +53,9 @@ For each `<Link href="...">` or `<a href="...">` in the changed files (or whole 
 > PR #83 の全変更箇所のリンクを link-integrity-tester で検証
 ```
 
-Walks `git diff main` to find changed files containing href, fetches Preview URL,
-clicks/follows each link, returns pass/fail per link.
+Walks `git diff main` to find changed files containing href, runs the branch locally
+(`npm run build && npm run start` — preview deploy は原則作らない), follows each link,
+returns pass/fail per link.
 
 ### Pattern 2: Run on production after deploy
 
@@ -75,6 +76,7 @@ Walks sitemap.xml, follows every internal link, returns broken/mismatched ones.
 - **Build passes ≠ links work**. tsc only checks route file existence, not semantic intent. This skill verifies intent
 - **Run BEFORE merge whenever <Link href>, <a href>, button onClick href, redirect rule changes**
 - **Run AFTER deploy** when ISR/CDN cache might have shifted route resolution
+- **Vercel Preview deploy は全プロジェクトで無効化済み**（2026-06-05 制定・課金抑制）。飯田さんの明示指示なしに preview を作らない。merge 前検証はローカルビルド（`npm run build && npm run start`）に対して行う
 - For Vercel Preview URLs behind SSO, fall back to "build the page text + static analysis" mode
 
 ## Output

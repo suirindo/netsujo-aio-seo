@@ -56,11 +56,11 @@ python3 scripts/gsc-weekly-audit.py \
   --discord
 ```
 
-Set `DISCORD_WEBHOOK_URL` env var. Critical findings trigger red embed, warnings orange, info blue.
+Set `DISCORD_WEBHOOK` env var (NOT `DISCORD_WEBHOOK_URL` — the scripts read `os.environ.get("DISCORD_WEBHOOK")`). Critical findings trigger red embed, warnings orange, info blue.
 
 ### GitHub Actions weekly cron
 
-See `references/github-actions-weekly.yml` for the cron workflow that runs every Monday 09:00 JST and posts to Discord/Slack.
+Workflow「GSC 週次フル監査」 runs every Monday 09:00 JST in both miyakodeit and netsujo-web repos and posts to Discord. Webhook is stored as repo secret `DISCORD_WEBHOOK` (`gh secret set DISCORD_WEBHOOK`).
 
 ### Output
 
@@ -81,12 +81,13 @@ Override defaults via env vars or CLI flags:
 | Min impressions for CTR check | 100 | `--min-impressions 50` |
 | Top URLs source | sitemap top-30 | `--urls-file urls.txt` |
 
-## Reference files
+## Reference implementations
 
-- `references/gsc-weekly-audit-spec.md` — Full audit spec with edge cases
-- `references/github-actions-weekly.yml` — GitHub Actions cron template
-- `references/discord-webhook-format.md` — Discord embed format
-- `scripts/gsc-weekly-audit.py` — Main entry point
+実運用中のスクリプト本体（このスキルディレクトリには同梱していない）:
+
+- `miyakodeit/scripts/gsc-weekly-audit.py` — miyakodeit.com 用（sc-domain:miyakodeit.com）
+- `netsujo-web/scripts/gsc-weekly-audit.py` — netsujo.jp 用（URL-prefix `https://netsujo.jp/` + GA4 property 382871067）
+- 各リポの GitHub Actions workflow「GSC 週次フル監査」— cron テンプレート
 
 ## Battle-tested patterns
 
@@ -100,7 +101,7 @@ These rules are encoded as default-on Critical-level alerts in this audit.
 
 ## Related skills
 
-- `netsujo-aio:gsc-url-inspect` — One-shot URL inspection for new routes
-- `netsujo-aio:sitemap-resubmit` — Submit sitemap.xml via Sitemaps API
+- `netsujo-aio:indexation-recovery` — Discovered/Crawled-not-indexed の診断と復旧
+- `netsujo-aio:bing-indexnow` — Bing/IndexNow への即時インデックス送信
 - `netsujo-aio:jsonld-faqpage` — Fix rich result eligibility
 - `claude-seo:seo-technical` — Broader technical SEO audit (complements this)
