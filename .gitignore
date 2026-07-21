@@ -7,3 +7,4 @@ reports/
 __pycache__/
 *.pyc
 .venv/
+plugins/netsujo-aio/skills/*-workspace/
