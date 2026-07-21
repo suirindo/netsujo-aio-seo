@@ -1,11 +1,29 @@
 #!/usr/bin/env python3
-"""indexation-recovery 診断 CLI(scaffold)
+"""indexation-recovery: 指定 URL の failure mode 分類（URL Inspection API）
 
-GSC sitemap submitted URLs を走査し、未インデックス URL の failure mode を分類する。
-完全な recovery flow は今後のリリースで実装予定。
+⚠️ これは「原因を特定する」ツールではない。**渡した URL を調べるだけ**である。
+
+原因の特定には必ず先に classify-coverage-export.py を使うこと:
+
+    python3 classify-coverage-export.py <GSCドリルダウンexport.zip>
+
+理由: GSC の Index Coverage には URL 一覧を返す API が存在せず、
+Search Analytics API は impressions>0 の URL しか返さない。
+ビルドアセット・ジャンク URL は impressions が付かないため
+**API からは原理的に見えない**。このスクリプトだけで母集団を推定すると、
+「API に見えている URL」に原因を誤帰属させる。
+実例: netsujo.jp で未インデックス1,437件を「旧CMS URL が主犯」と診断したが、
+ドリルダウン CSV では旧CMS URL は1,000件中0件、実際は99.9%がビルドアセットだった
+（2026-07-21・9日間の誤診）。
+
+このスクリプトの正しい用途:
+  - classify-coverage-export.py で絞り込んだ real-page の状態確認
+  - サイトマップ掲載ページの indexed 率サンプリング
+  - 対応後の再クロール進捗の確認（lastCrawlTime）
 
 Usage:
-    python diagnose.py --site-url https://www.miyakodeit.com/ --credentials ~/.config/gcloud/gsc.json
+    python diagnose.py --site-url https://www.miyakodeit.com/ \\
+        --credentials ~/.config/gcloud/gsc.json --urls <URL> [<URL> ...]
 
 Output: JSON with failure-mode classification per URL
 """

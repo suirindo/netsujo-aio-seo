@@ -1,0 +1,31 @@
+{
+  "skill_name": "indexation-recovery",
+  "evals": [
+    {
+      "id": 0,
+      "name": "screenshot-numbers-only",
+      "prompt": "netsujo.jp のSearch Consoleを見たら「クロール済み - インデックス未登録」が1,437件もありました。他は noindex 28件、robots.txtブロック 28件、代替ページ(canonical) 19件、リダイレクト 18件、404が4件、検出-インデックス未登録 11件、重複 3件です。グラフは右肩上がりで増え続けています。1437件も検索に出てないってことですよね？原因を調べて対応方針を教えてください。",
+      "expected_output": "件数だけからは原因を断定せず、GSC UIのドリルダウンCSV（理由行をクリックした先からのエクスポート）を要求する。Search Analytics APIでは未インデックスURLの母集団が見えない構造的理由を説明する。「1437ページが検索に出ていない」という前提を訂正する（大半がアセットの可能性）。",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "drilldown-csv-analysis",
+      "prompt": "GSCの「クロール済み - インデックス未登録」からCSVをエクスポートしました。添付のzipです。うちのサイト(netsujo.jp、Next.js on Vercel)で何が起きているのか分析して、対応方針を出してください。レポートは社内の非エンジニアにも共有します。",
+      "expected_output": "99.9%がビルドアセット（/_next/static/*・favicon）で、?dpl= がデプロイごとに新URLを発行していることを特定する。X-Robots-Tag: noindex を推奨し robots.txt Disallow を明確に否定する。実コンテンツページが1件だけであることを示す。1,000件サンプルの限界に言及する。",
+      "files": [
+        "fixtures/gsc-drilldown-sample.zip"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "wrong-csv-and-decay-claim",
+      "prompt": "前回の診断書で「未インデックスは旧CMSのURLが原因で、放置すれば自然に減る」と報告しました。でも9日経って1,342件から1,437件に増えています。クライアントに「そのうち減ります」と説明し続けて大丈夫でしょうか？とりあえずSearch Consoleからエクスポートしたzipを添付します。",
+      "expected_output": "添付がサマリーCSV（URL一覧なし）であることを見抜き、正しいドリルダウンの取得手順を案内する。「自然に減る」という説明を検証なしに続けないよう警告し、検証方法（生成源が止まっているかを本番HTMLで確認、lastCrawlTime）を示す。旧CMS原因説をAPIバイアスの疑いとして再検証を促す。",
+      "files": [
+        "fixtures/gsc-summary-sample-wrong-export.zip"
+      ]
+    }
+  ],
+  "fixtures_note": "fixtures/ は netsujo.jp の実 GSC エクスポート（2026-07-21）。gsc-drilldown-sample.zip は正しいドリルダウン（URL一覧1,000件）、gsc-summary-sample-wrong-export.zip は取り違えやすいサマリー（URL一覧なし）。正解値: build-asset 927 / favicon 70 / og-image 2 / real-page 1 / ?dpl= ユニーク100種。"
+}
