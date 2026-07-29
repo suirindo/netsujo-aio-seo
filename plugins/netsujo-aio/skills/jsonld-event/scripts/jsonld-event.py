@@ -6,7 +6,8 @@ modes, validates Google rich results requirements (timezone-aware startDate,
 location shape per mode, image dimensions), and emits plain JSON, a Next.js
 App Router React component, or a Strapi v5 component scaffold.
 
-Battle-tested on miyakodeit.com (155+京都IT勉強会イベント).
+Battle-tested on the miyakodeit.com event archive. Current totals are read from
+the canonical community statistics snapshot, never hard-coded here.
 
 CLI examples:
     python3 jsonld-event.py --input event.yaml --output schema.json

@@ -1,0 +1,20 @@
+{
+  "contract": "visibility-dashboard-import/v1",
+  "schemaVersion": 1,
+  "siteId": "netsujo",
+  "generatedAt": "2026-07-29T10:00:00.000Z",
+  "registryVersion": "2026-07-29",
+  "searchIntegration": "measured",
+  "searchSnapshotId": "gsc-20260729-a1",
+  "aiIntegration": "unmeasured",
+  "aiSnapshotId": null,
+  "rows": [
+    {
+      "targetId": "N-S-19",
+      "searchStatus": "SEARCH_VISIBLE",
+      "aiStatus": "AI_UNMEASURED",
+      "contentReadiness": "partial",
+      "conversionStatus": "unconnected"
+    }
+  ]
+}

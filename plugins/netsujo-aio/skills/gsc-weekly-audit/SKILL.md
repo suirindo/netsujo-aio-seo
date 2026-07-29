@@ -14,7 +14,9 @@ Production-tested Google Search Console audit pipeline. Runs 8 sequential checks
 3. **Search Analytics**: Query/page/country/device breakdown over 7-day window. Top 50 queries + page impressions + CTR + position.
 4. **Canonical mismatch**: User-declared canonical vs Google-selected canonical. Critical for /blog, /events, dynamic routes.
 5. **CTR low pages**: Pages with impressions > 100 and CTR < 1.0% in last 28 days. Suggests title/description rewrite candidates.
-6. **0-impression pages**: Indexed pages with 0 impressions in 28 days. Possible thin content or wrong intent.
+6. **0-impression pages**: Pages confirmed indexed by URL Inspection but measured
+   at 0 impressions in the declared Search Analytics window. This is a demand /
+   matching signal, not proof of non-indexation.
 7. **Discovered count**: Pages submitted to sitemap but still "Discovered, not indexed".
 8. **Sitemap lastmod drift**: Real lastmod (file mtime) vs declared lastmod. Google distrusts wrong lastmod.
 
@@ -91,13 +93,29 @@ Override defaults via env vars or CLI flags:
 
 ## Battle-tested patterns
 
-This skill encodes lessons learned from 6 months of weekly audits on `miyakodeit.com` (564 community members) and `netsujo.jp` (Web3/AI consultancy):
+This skill encodes lessons learned from 6 months of weekly audits on
+`miyakodeit.com` and `netsujo.jp`:
 
 - **2026-05-10 incident**: Fake sitemap `/blog/meetup-anxiety` shipped to Google. Caught 7 days late because we didn't run `sitemaps.list()` weekly. Now mandatory.
 - **2026-05-11 incident**: `/blog` page had duplicate title from layout template. Caught 5 days late. Now we cross-check sitemap title vs rendered HTML title.
 - **2026-05-17 rule**: "GSC weekly full audit is mandatory before ANY content shipping. No exceptions." (CLAUDE.md)
 
 These rules are encoded as default-on Critical-level alerts in this audit.
+
+## Visibility-map interpretation contract
+
+- Join Search Analytics by both query and page. A site-level or query-only
+  aggregate cannot diagnose page mismatch or cannibalization.
+- One manual SERP check without the domain is `SEARCH_UNMEASURED`, not "圏外".
+- `impressions=0` means measured zero only when the query was present in a
+  successful, declared GSC request; it does not prove that the URL is
+  unindexed.
+- If an article and service page compete for commercial intent, assign one
+  primary decision page and one supporting education page, then record the
+  internal-link/canonical roles.
+- Keep search status separate from AI citation, content readiness, and
+  conversion measurement. Never compute one blended visibility status.
+- Seed-only registries remain unmeasured until a real GSC import is attached.
 
 ## Related skills
 

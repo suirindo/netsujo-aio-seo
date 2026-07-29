@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""passage-citability-checker CLI
+"""passage content-readiness checker CLI
 
-冒頭200トークンの GEO citability スコアを計算する。
-AI Overview 引用の44.2%が記事先頭30%から発生(CMU GEO framework)。
+冒頭パッセージのローカル編集ヒューリスティックを計算する。
+このスコアは引用確率や引用増加率を推定しない。
 
 Scoring(0-100):
     Definition density   (25): "Xとは Y である" 形式の存在
@@ -100,10 +100,10 @@ def score_citation_hooks(passage: str) -> int:
 
 def verdict(total: int) -> str:
     if total >= 80:
-        return "Citation-ready"
+        return "Strong content readiness"
     if total >= 60:
         return "Acceptable, room for improvement"
-    return "Critical — rewrite required"
+    return "Rewrite candidate"
 
 
 def main():
@@ -141,12 +141,14 @@ def main():
         "scores": scores,
         "total": total,
         "max": 100,
+        "metricType": "contentReadiness",
         "verdict": verdict(total),
+        "citationOutcome": "unmeasured",
     }
     if total < 80:
         out["recommendations"] = [
             "冒頭に「Xとは Y である」型の定義文を1文目に配置",
-            "数値・統計を最初の3文以内に最低2つ埋め込む",
+            "原典確認済みの数値がある場合のみ、冒頭で簡潔に示す",
             "固有名詞には括弧付きの読みを併記",
             "「N個の理由」「Nステップ」等の citation hook を入れる",
         ]

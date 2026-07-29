@@ -1,6 +1,6 @@
 ---
 name: jsonld-event
-description: Generate and validate Schema.org Event JSON-LD structured data for online, offline, and hybrid events. Supports OnlineEventAttendanceMode / OfflineEventAttendanceMode / MixedEventAttendanceMode, Google rich results requirements (timezone-aware startDate, 1920x1080 image), and outputs JSON / Next.js React component / Strapi v5 component. Battle-tested on miyakodeit.com (155+京都IT勉強会イベント) and used for Google Meet online meetups, Kyoto offline venues, and hybrid sessions. Use when user says "Event schema", "Event JSON-LD", "event structured data", "rich results event", "online event schema", "offline event schema", "hybrid event schema", "MixedEventAttendanceMode", "connpass schema", or has event listing pages that need rich results eligibility.
+description: Generate and validate Schema.org Event JSON-LD structured data for online, offline, and hybrid events. Supports OnlineEventAttendanceMode / OfflineEventAttendanceMode / MixedEventAttendanceMode, Google rich results requirements (timezone-aware startDate, recommended images), and outputs JSON / Next.js React component / Strapi v5 component. Use when user says "Event schema", "Event JSON-LD", "event structured data", "rich results event", "online event schema", "offline event schema", "hybrid event schema", "MixedEventAttendanceMode", "connpass schema", or has event listing pages that need rich results eligibility.
 ---
 
 # Event JSON-LD Generator
@@ -161,7 +161,9 @@ python3 scripts/jsonld-event.py \
   --output ./public/jsonld/
 ```
 
-Reads every `*.yaml` / `*.json` under `./events/` and writes one JSON-LD file per event. Used to backfill 155+miyakodeitイベントアーカイブ.
+Reads every `*.yaml` / `*.json` under `./events/` and writes one JSON-LD file
+per event. Current archive totals must come from the canonical statistics
+snapshot, never a literal in this skill.
 
 ### connpass URL extraction (planned)
 
@@ -191,15 +193,30 @@ Built-in checks before output:
 | offers.price and offers.priceCurrency both set or both absent | Critical |
 | organizer.name present | Warning |
 
+## Event-count boundary
+
+JSON-LD generation and community event-count aggregation are separate
+responsibilities. If a consumer also displays a current total:
+
+- Read `community-stats-snapshot/v1` pinned at build start.
+- Require `connpass-published-events-v1`: published completed, cancelled, and
+  upcoming unique events; exclude private/unpublished and duplicates; classify
+  dates in JST.
+- Fetch all upstream pages before publishing a new snapshot.
+- On refresh failure, show last-known-good as stale; never zero or a constant.
+- Verify that page copy, JSON-LD, metadata, and llms artifacts use the same
+  snapshot ID.
+
 ## Battle-tested patterns
 
 This skill is based on `miyakodeit.com` event implementation:
 
-- 155+京都IT勉強会イベントアーカイブ(2022〜2026)で稼働中
+- 京都IT勉強会イベントアーカイブで稼働中
 - `OnlineEventAttendanceMode`:Google Meet / Zoomオンライン勉強会
 - `OfflineEventAttendanceMode`:京都市内オフライン会場(京都リサーチパーク、CAMPHOR-、QUESTIONなど)
 - `MixedEventAttendanceMode`:ハイブリッド開催(会場+配信)
-- 2026-05-28 AI動画制作ハンズオン(`/blog/ai-video-introduction-2026-05-28`、Google Meet開催、参加18名)で`OnlineEventAttendanceMode` JSON-LDを実装。後日ChatGPTで「京都AI動画イベント」検索時にcitationを確認
+- OnlineEventAttendanceMode をオンラインイベント記事へ適用し、構造と
+  表示内容の一致を検証
 
 ## Configuration
 

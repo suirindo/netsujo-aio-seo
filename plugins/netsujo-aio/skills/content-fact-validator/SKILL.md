@@ -58,6 +58,29 @@ For each factual claim being added or propagated:
 - **Geographic outliers are red flags**. Flag entries that don't fit the entity's regional pattern
 - **Strapi articles are the canonical truth for blog-related facts**. If the claim relates to a topic with a blog post, the post's content (excerpt, displayDate, body text) is the source of record
 
+## Mutable statistic pipeline contract
+
+Current member/event counts are valid only when their full provenance is
+available:
+
+`paginated upstream adapter → versioned count rule → immutable success snapshot → atomic publisher → pinned consumers`
+
+- Fetch every upstream page. Partial pagination is a failed refresh.
+- For connpass group totals, use `connpass-published-events-v1`: deduplicate
+  event IDs, include published completed/cancelled/upcoming events, exclude
+  private/unpublished events, and classify dates in JST.
+- On timeout, 429, or 5xx, serve the last-known-good snapshot as `stale` with a
+  safe error type. Never publish zero or a hard-coded fallback.
+- Historical publication-time values are allowed only when the surrounding
+  date/context clearly marks them historical. Do not rewrite history to match
+  the current snapshot.
+- A current mismatch across page copy, JSON-LD, metadata, llms files, partner
+  copy, or dynamic UI is `AI_FACT_CONFLICT` and blocks citation expansion.
+- Pin one snapshot ID at build start. Equal numbers with different snapshot IDs
+  are a provenance mismatch (`FACT_PIPELINE_CONFLICT`).
+- Current-value numeric literals in consumers fail CI; only named historical
+  fixtures may contain historical literals.
+
 ## Usage
 
 ### Pattern 1: Before editing authors-fallback.ts

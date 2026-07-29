@@ -14,8 +14,8 @@
     {
       "name": "netsujo-aio",
       "source": "./plugins/netsujo-aio",
-      "description": "12-skill AIO/SEO toolkit with GSC weekly audit, full JSON-LD suite (FAQPage/Organization/Article/Event/Breadcrumb/Speakable), llms.txt for AI search, GA4 custom dimensions + tracking wiring, and Japanese-specific quality gates. Battle-tested on miyakodeit.com and netsujo.jp.",
-      "version": "0.2.0",
+      "description": "21-skill AIO/SEO toolkit with goal-backcast visibility contracts, GSC and AI citation measurement, canonical fact pipelines, JSON-LD, GA4, llms.txt consistency, and Japanese quality gates.",
+      "version": "0.5.0",
       "category": "seo",
       "tags": [
         "seo",
@@ -29,6 +29,8 @@
         "json-ld",
         "japanese",
         "i18n"
+        ,"visibility-map"
+        ,"ai-citation"
       ],
       "author": {
         "name": "Tomohiro Iida (Netsujo Inc.)",

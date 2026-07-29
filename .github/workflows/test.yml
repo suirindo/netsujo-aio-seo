@@ -23,3 +23,9 @@ jobs:
             head -10 "$f" | grep -q '^description: ' || (echo "Missing description field in $f"; exit 1)
           done
           echo "All SKILL.md files have valid frontmatter"
+      - name: Validate versioned data contracts
+        run: python3 scripts/validate-contracts.py
+      - name: Test strict contract behavior
+        run: python3 scripts/test-contracts.py
+      - name: Run visibility policy regressions
+        run: python3 scripts/run-evals.py

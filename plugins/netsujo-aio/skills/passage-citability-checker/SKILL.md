@@ -1,17 +1,23 @@
 ---
 name: passage-citability-checker
-description: Score the AI citation readiness of a page's first 200 tokens. AI Overview/ChatGPT/Perplexity cite 44.2% of passages from the first 30% of an article. This skill measures definition-density, statistic-density, answer-first structure, and entity clarity in the opening passage and proposes rewrites. Use when user says "AI引用", "GEO", "AI Overview optimization", "ChatGPT citation", "passage citability", "AIに引用される", "冒頭リード", or "intro rewrite".
+description: Score the AI citation readiness of a page's opening passage. Measures definition density, sourced-statistic density, answer-first structure, entity clarity, and self-containedness, then proposes rewrites without claiming a citation lift. Use when user says "AI引用", "GEO", "AI Overview optimization", "ChatGPT citation", "passage citability", "AIに引用される", "冒頭リード", or "intro rewrite".
 ---
 
 # Passage Citability Checker
 
-Scores the first 200 tokens of a blog/landing page on five GEO (Generative Engine Optimization) dimensions and outputs an actionable rewrite plan. Built on CMU GEO framework empirical findings (Stanford 2024 / "GEO: Generative Engine Optimization" / Aggarwal et al.).
+Scores the opening passage of a blog/landing page on five retrieval-readiness
+dimensions and outputs an actionable rewrite plan. The rubric is a local
+editorial heuristic informed by the GEO research literature; it is not a
+provider ranking model.
 
-## Why this matters in 2026
+## Why this matters
 
-- **44.2% of AI Overview citations come from the first 30% of an article** (CMU GEO study, 2024-2025 large-scale benchmark)
-- AI Overviews + Personal Intelligence + ChatGPT Search synthesize answers — passages that *look like answers* get cited; passages that *meander* get skipped
-- Google公式 (developers.google.com/search/docs/fundamentals/ai-optimization-guide) recommends standard SEO + E-E-A-T + structured data — no AI-specific markup needed. **The lever is content structure, not metadata**
+- A self-contained opening passage is easier to retrieve and evaluate than an
+  unsupported preamble, but this heuristic does not prove citation probability
+- Google recommends standard SEO, helpful content, accessible text, and
+  structured data consistency; no special AI-only markup guarantees inclusion
+- Citation success must be measured separately with repeated, condition-scoped
+  engine observations
 
 ## What this skill scores
 
@@ -25,10 +31,10 @@ For the page's first 200 tokens (lead paragraph + first H2/H3 if reached):
 | **Entity clarity** | 16% | Are proper nouns (brand, place, person, technology) introduced with full names + parenthetical reading? |
 | **Citation hooks** | 20% | Presence of quote-friendly fragments (e.g., "3つの理由", "ステップ1〜5", "A vs B comparison") |
 
-Total score 0-100. Threshold:
-- 80+: Citation-ready (likely to be quoted by AI Overview / ChatGPT / Perplexity)
+Total score 0-100. Local editorial threshold:
+- 80+: Strong content readiness
 - 60-79: Acceptable, room for improvement
-- <60: Critical — rewrite required
+- <60: Rewrite candidate
 
 ## What this skill does
 
@@ -38,7 +44,7 @@ Total score 0-100. Threshold:
 4. **Score on 5 dimensions** and compute weighted total
 5. **Generate rewrite proposal** — if score < 80, propose:
    - Add a "Xとは Y である" sentence at position 1
-   - Inject at least 2 concrete numbers in the first 3 sentences
+   - Surface concrete numbers only when already supported by a canonical source
    - Reorder to put the answer first
    - Add (parenthetical reading) for proper nouns
 6. **Report** — current score, diagnosis, proposed rewrite, expected score after rewrite
@@ -89,9 +95,19 @@ GitHub Actions hook: any new `.tsx` under `src/app/blog/` must score >= 70 to me
   "verdict": "Acceptable, room for improvement",
   "rewrite_proposal": "BizDev(ビズデブ・事業開発)とは、技術製品やサービスの市場拡大を担う職種です。営業との違いは...(再構成済み)",
   "expected_score_after": 86,
-  "expected_ai_citation_lift": "+22% (estimated based on CMU GEO benchmark)"
+  "measurement_plan": "capture a pre-change snapshot and repeat the same engine/model/locale/variant conditions after release"
 }
 ```
+
+## Evidence and outcome boundary
+
+- This score is `contentReadiness`, not an AI citation status.
+- Never emit an estimated citation-lift percentage from the rubric score.
+- Check every mutable fact against its canonical snapshot before recommending
+  it as a citation hook. A mismatch is `AI_FACT_CONFLICT`.
+- `llms.txt` or schema presence is delivery evidence only.
+- A citation is stable only after at least three successful same-condition
+  observations; one citation remains volatile.
 
 ## References
 

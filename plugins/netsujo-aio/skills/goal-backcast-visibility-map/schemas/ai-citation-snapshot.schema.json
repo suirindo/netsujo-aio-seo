@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://netsujo.jp/contracts/ai-citation-snapshot-v1.schema.json",
+  "title": "AI citation snapshot v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "snapshotId", "siteId", "observedAt", "status", "observations", "providerFailures"],
+  "properties": {
+    "contract": { "const": "ai-citation-snapshot/v1" },
+    "schemaVersion": { "const": 1 },
+    "snapshotId": { "type": "string", "minLength": 1 },
+    "siteId": { "type": "string", "minLength": 1 },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "status": { "enum": ["success", "partial", "error"] },
+    "observations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/observation" }
+    },
+    "providerFailures": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/providerFailure" }
+    }
+  },
+  "$defs": {
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+        "required": ["targetId", "observedAt", "engine", "model", "locale", "variantId", "runCount", "successCount", "ownMentionCount", "ownCitationCount", "ownCitationUrls", "competitorDomains", "stability", "factCheck", "snapshotRef"],
+      "properties": {
+          "targetId": { "type": "string", "minLength": 1 },
+          "observedAt": { "type": "string", "format": "date-time" },
+        "engine": { "type": "string", "minLength": 1 },
+        "model": { "type": ["string", "null"], "minLength": 1 },
+        "locale": { "type": "string", "minLength": 1 },
+        "variantId": { "type": "string", "minLength": 1 },
+        "runCount": { "type": "integer", "minimum": 0 },
+        "successCount": { "type": "integer", "minimum": 0 },
+        "ownMentionCount": { "type": "integer", "minimum": 0 },
+        "ownCitationCount": { "type": "integer", "minimum": 0 },
+        "ownCitationUrls": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri", "pattern": "^https?://" }
+        },
+        "competitorDomains": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "stability": { "enum": ["stable", "volatile", "not_cited", "unmeasured"] },
+          "factCheck": { "enum": ["pass", "warn", "fail", "unmeasured"] },
+        "snapshotRef": { "type": "string", "minLength": 1 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "stability": { "const": "stable" } }, "required": ["stability"] },
+          "then": {
+            "properties": {
+              "runCount": { "minimum": 3 },
+              "successCount": { "minimum": 3 }
+            }
+          }
+        }
+      ]
+    },
+    "providerFailure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["engine", "code"],
+      "properties": {
+        "engine": { "type": "string", "minLength": 1 },
+        "code": {
+          "enum": ["timeout", "rate_limited", "upstream_5xx", "invalid_payload", "network"]
+        }
+      }
+    }
+  }
+}

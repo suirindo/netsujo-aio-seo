@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://netsujo.jp/contracts/community-stats-snapshot-v1.schema.json",
+  "title": "Community statistics snapshot v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "snapshotId", "fetchedAt", "source", "sourceEvidenceRef", "memberCount", "eventCount", "eventCountRuleVersion", "eventBreakdown", "pageCount", "sourceEventCount"],
+  "properties": {
+    "contract": { "const": "community-stats-snapshot/v1" },
+    "schemaVersion": { "const": 1 },
+    "snapshotId": { "type": "string", "minLength": 1 },
+    "source": { "const": "connpass" },
+    "sourceEvidenceRef": { "type": "string", "format": "uri" },
+    "fetchedAt": { "type": "string", "format": "date-time" },
+    "memberCount": { "type": "integer", "minimum": 0 },
+    "eventCount": { "type": "integer", "minimum": 0 },
+    "eventCountRuleVersion": { "const": "connpass-published-events-v1" },
+    "eventBreakdown": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["completed", "cancelled", "upcoming"],
+      "properties": {
+        "completed": { "type": "integer", "minimum": 0 },
+        "cancelled": { "type": "integer", "minimum": 0 },
+        "upcoming": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "pageCount": { "type": "integer", "minimum": 1 },
+    "sourceEventCount": { "type": "integer", "minimum": 0 }
+  }
+}

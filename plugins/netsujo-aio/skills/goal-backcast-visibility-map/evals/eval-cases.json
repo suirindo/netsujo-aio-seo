@@ -1,0 +1,128 @@
+[
+  {
+    "id": "E01",
+    "scenario": "A high-volume generic keyword competes with a lower-volume commercial term tied to the approved conversion.",
+    "expectedDecision": "Prioritize the decision-linked commercial target.",
+    "ownerSkills": ["goal-backcast-visibility-map"],
+    "requiredPolicyTokens": ["high-volume generic term", "lower-volume commercial term", "primary conversion"]
+  },
+  {
+    "id": "E02",
+    "scenario": "A one-off SERP check does not show the domain and no query-level GSC row is available.",
+    "expectedDecision": "Return SEARCH_UNMEASURED, not an out-of-rank claim.",
+    "ownerSkills": ["goal-backcast-visibility-map", "gsc-weekly-audit"],
+    "requiredPolicyTokens": ["One SERP spot check", "SEARCH_UNMEASURED", "Never label it \"圏外\""]
+  },
+  {
+    "id": "E03",
+    "scenario": "A successful GSC query reports zero impressions for a URL.",
+    "expectedDecision": "Keep measured zero separate from indexation status.",
+    "ownerSkills": ["goal-backcast-visibility-map", "gsc-weekly-audit", "indexation-recovery"],
+    "requiredPolicyTokens": ["impressions=0", "not proof of non-indexation", "measured search result"]
+  },
+  {
+    "id": "E04",
+    "scenario": "One AI-engine run cites the site.",
+    "expectedDecision": "Classify the citation as volatile, not stable.",
+    "ownerSkills": ["goal-backcast-visibility-map", "ai-citation-tracker"],
+    "requiredPolicyTokens": ["One successful citation run is never stable", "at least three successful", "same engine/model/locale/variant"]
+  },
+  {
+    "id": "E05",
+    "scenario": "Search visibility is strong while AI citation is unmeasured.",
+    "expectedDecision": "Report independent search and AI axes.",
+    "ownerSkills": ["goal-backcast-visibility-map"],
+    "requiredPolicyTokens": ["Never collapse search", "AI citation", "independent axes"]
+  },
+  {
+    "id": "E06",
+    "scenario": "Current member and event counts conflict across first-party surfaces.",
+    "expectedDecision": "Return AI_FACT_CONFLICT and stop expansion.",
+    "ownerSkills": ["goal-backcast-visibility-map", "content-fact-validator"],
+    "requiredPolicyTokens": ["AI_FACT_CONFLICT", "stop citation/content expansion", "current-value mismatch"]
+  },
+  {
+    "id": "E07",
+    "scenario": "Politeness and suffix variants are supplied as separate AI questions.",
+    "expectedDecision": "Cluster variants under one canonical target denominator.",
+    "ownerSkills": ["goal-backcast-visibility-map", "ai-citation-tracker"],
+    "requiredPolicyTokens": ["canonical target ID", "variant IDs", "canonical targets, not raw variants"]
+  },
+  {
+    "id": "E08",
+    "scenario": "A guide article and service page both receive impressions for the same commercial intent.",
+    "expectedDecision": "Assign decision and education roles before remediation.",
+    "ownerSkills": ["goal-backcast-visibility-map", "gsc-weekly-audit"],
+    "requiredPolicyTokens": ["article and service page", "primary decision page", "supporting education content"]
+  },
+  {
+    "id": "E09",
+    "scenario": "The AI test sample contains only branded questions.",
+    "expectedDecision": "Flag a measurement defect and reject overall share claims.",
+    "ownerSkills": ["goal-backcast-visibility-map", "ai-citation-tracker"],
+    "requiredPolicyTokens": ["branded-only sample", "major measurement defect", "overall citation-share claim"]
+  },
+  {
+    "id": "E10",
+    "scenario": "A dated article contains a publication-time community count.",
+    "expectedDecision": "Preserve clearly dated historical facts.",
+    "ownerSkills": ["goal-backcast-visibility-map", "content-fact-validator"],
+    "requiredPolicyTokens": ["Historical publication-time values", "remain historical", "date make that meaning explicit"]
+  },
+  {
+    "id": "E11",
+    "scenario": "llms.txt exists but no engine observation has run.",
+    "expectedDecision": "Keep AI citation status unmeasured.",
+    "ownerSkills": ["goal-backcast-visibility-map", "llms-txt-generator"],
+    "requiredPolicyTokens": ["llms.txt` existence", "never evidence of a mention or citation", "engine observation snapshot"]
+  },
+  {
+    "id": "E12",
+    "scenario": "A dashboard is populated only from seed targets.",
+    "expectedDecision": "Fail a readiness gate that requires measurement imports.",
+    "ownerSkills": ["goal-backcast-visibility-map"],
+    "requiredPolicyTokens": ["Seed-only UI", "unmeasured", "GSC/AI imports"]
+  },
+  {
+    "id": "E13",
+    "scenario": "The upstream event API returns multiple pages.",
+    "expectedDecision": "Require complete pagination before refresh success.",
+    "ownerSkills": ["goal-backcast-visibility-map", "content-fact-validator"],
+    "requiredPolicyTokens": ["Fetch every upstream page", "partial pagination result fails refresh", "entire lineage"]
+  },
+  {
+    "id": "E14",
+    "scenario": "Completed, cancelled, upcoming, private, and duplicate event rows are present around a JST date boundary.",
+    "expectedDecision": "Apply the versioned published-event inclusion rule.",
+    "ownerSkills": ["goal-backcast-visibility-map", "jsonld-event"],
+    "requiredPolicyTokens": ["connpass-published-events-v1", "private/unpublished", "classify dates in JST"]
+  },
+  {
+    "id": "E15",
+    "scenario": "The upstream statistics API times out.",
+    "expectedDecision": "Serve a stale last-known-good snapshot without publishing zero.",
+    "ownerSkills": ["goal-backcast-visibility-map", "content-fact-validator"],
+    "requiredPolicyTokens": ["last-known-good snapshot", "do not publish zero", "safe error type"]
+  },
+  {
+    "id": "E16",
+    "scenario": "A new snapshot is published while a multi-artifact build is running.",
+    "expectedDecision": "Keep the build pinned to its starting snapshot.",
+    "ownerSkills": ["goal-backcast-visibility-map"],
+    "requiredPolicyTokens": ["Pin one snapshot ID at build start", "pinned payload", "published concurrently"]
+  },
+  {
+    "id": "E17",
+    "scenario": "A consumer hard-codes the latest member/event totals.",
+    "expectedDecision": "Fail CI outside named historical fixtures.",
+    "ownerSkills": ["goal-backcast-visibility-map", "content-fact-validator"],
+    "requiredPolicyTokens": ["Current-value literals in consumers fail CI", "named historical fixtures", "literal historical counts"]
+  },
+  {
+    "id": "E18",
+    "scenario": "Two consumers display equal values sourced from different snapshots.",
+    "expectedDecision": "Return a provenance mismatch.",
+    "ownerSkills": ["goal-backcast-visibility-map", "content-fact-validator"],
+    "requiredPolicyTokens": ["same snapshot ID", "different snapshot IDs", "provenance mismatch"]
+  }
+]

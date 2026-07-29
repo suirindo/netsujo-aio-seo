@@ -32,6 +32,18 @@ Runs the following stages **in order**. Failure at any stage blocks subsequent s
 - Cross-reference against canonical sources (Strapi, official URLs)
 - FAIL = block merge
 
+### Stage 1.5: visibility and snapshot contracts
+- When visibility targets or analytics imports change, run
+  `python3 scripts/validate-contracts.py` and `python3 scripts/run-evals.py`
+- Require exact supported contract versions; reject duplicate/orphan targets
+- Verify search, AI citation, content readiness, and CV measurement remain
+  separate axes
+- A seed-only UI is unmeasured; one AI citation run is volatile; a manual SERP
+  absence is `SEARCH_UNMEASURED`
+- For mutable statistics, verify all-page pagination, the versioned inclusion
+  rule, last-known-good stale behavior, build pinning, and one snapshot ID
+- FAIL = block merge
+
 ### Stage 2: schema-validator
 - All `<script type="application/ld+json">` blocks valid
 - Graph integrity (`@id` references resolve)
@@ -58,6 +70,8 @@ Runs the following stages **in order**. Failure at any stage blocks subsequent s
 ## Critical rules (enforced)
 
 - **Stage 1 (fact-check) MUST pass before merge** — facts cannot be fixed by ISR or re-deploy. Facts in deployed HTML reach Google/AI engines and get embedded in their training/index
+- **Stage 1.5 (contracts) MUST pass when applicable** — equal values from
+  different snapshots or collapsed search/AI status are semantic failures
 - **Stage 2 (schema) MUST pass** — broken JSON-LD silently degrades SEO with no visible warning
 - **Stage 3 (links) MUST pass** — broken/mismatched links are user-facing bugs
 - **Stage 4 (visual) WARN → human review** — flag for designer review, don't auto-block
@@ -72,6 +86,8 @@ Runs the following stages **in order**. Failure at any stage blocks subsequent s
 - New page routes
 - `metadata.title` / `metadata.description` / `metadata.openGraph` changes
 - `public/llms.txt` / `public/llms-full.txt` updates
+- Visibility registries, AI citation snapshots, community-stat snapshots, or
+  analytics dashboard imports
 
 **Optional but recommended** for:
 - CSS/style-only changes
@@ -106,6 +122,7 @@ When a new lessons-learned doc is added, update this skill's stages to include d
   "stages": {
     "build": { "pass": true, "duration_ms": 11000 },
     "fact_check": { "pass": true, "claims_validated": 8 },
+    "visibility_contracts": { "pass": true, "evals_passed": 18 },
     "schema": { "pass": true, "blocks_validated": 14 },
     "link_integrity": { "pass": true, "links_checked": 47 },
     "visual": { "pass": true, "pages_checked": 6, "warnings": 0 }
@@ -138,6 +155,7 @@ When a new lessons-learned doc is added, update this skill's stages to include d
 
 - `link-integrity-tester` — Stage 3
 - `content-fact-validator` — Stage 1
+- `goal-backcast-visibility-map` — Stage 1.5
 - `schema-validator` — Stage 2
 - `h1-mobile-check` — Stage 4 mobile check
 - `jp-ascii-space-fix` — Stage 4 text quality

@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://netsujo.jp/contracts/visibility-targets-v1.schema.json",
+  "title": "Visibility target registry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "registryVersion", "generatedAt", "goals", "targets"],
+  "properties": {
+    "contract": { "const": "visibility-targets/v1" },
+    "schemaVersion": { "const": 1 },
+    "registryVersion": { "type": "string", "minLength": 1 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "goals": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/goal" }
+    },
+    "targets": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/target" }
+    }
+  },
+  "$defs": {
+    "goal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "siteId", "label", "actor", "decision", "conversionIds"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "siteId": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "actor": { "type": "string", "minLength": 1 },
+        "decision": { "type": "string", "minLength": 1 },
+        "conversionIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "siteId", "kind", "clusterId", "goalId", "text", "variants", "locale", "branded", "persona", "intent", "funnelStage", "priority", "targetUrl", "gapReason", "evidenceUrls", "ctaEventNames", "owner", "active", "createdAt", "updatedAt"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "siteId": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["search_keyword", "ai_question"] },
+        "clusterId": { "type": "string", "minLength": 1 },
+        "goalId": { "type": "string", "minLength": 1 },
+        "text": { "type": "string", "minLength": 1 },
+        "variants": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "locale": { "type": "string", "minLength": 1 },
+        "branded": { "type": "boolean" },
+        "persona": { "type": "string", "minLength": 1 },
+        "intent": { "type": "string", "minLength": 1 },
+        "funnelStage": { "type": "string", "minLength": 1 },
+        "priority": { "enum": ["P0", "P1", "P2"] },
+        "targetUrl": {
+          "oneOf": [
+            { "type": "string", "format": "uri", "pattern": "^https?://" },
+            { "type": "null" }
+          ]
+        },
+        "gapReason": { "type": ["string", "null"], "minLength": 1 },
+        "evidenceUrls": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri", "pattern": "^https?://" }
+        },
+        "ctaEventNames": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "owner": { "type": "string", "minLength": 1 },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "anyOf": [
+        { "required": ["targetUrl"], "properties": { "targetUrl": { "type": "string" } } },
+        { "required": ["gapReason"], "properties": { "gapReason": { "type": "string" } } }
+      ]
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "contract": "community-stats-snapshot/v1",
+  "schemaVersion": 1,
+  "snapshotId": "stats-4845a6e0fe74893c",
+  "source": "connpass",
+  "sourceEvidenceRef": "https://mit.connpass.com/event/",
+  "fetchedAt": "2026-07-29T09:13:30.155Z",
+  "memberCount": 614,
+  "eventCount": 167,
+  "eventCountRuleVersion": "connpass-published-events-v1",
+  "eventBreakdown": {
+    "completed": 152,
+    "cancelled": 11,
+    "upcoming": 4
+  },
+  "pageCount": 17,
+  "sourceEventCount": 167
+}
