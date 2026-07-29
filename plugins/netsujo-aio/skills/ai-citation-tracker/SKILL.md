@@ -11,9 +11,9 @@ Defines a fixed query set per topic cluster, sends each query to ChatGPT/Perplex
 
 Referral traffic from AI engines (`chatgpt.com`, `perplexity.ai`, `copilot.com`) is a lagging indicator — by the time it shows up in GA4, the citation was made days ago. This skill is a leading indicator:
 
-- **Netsujo** sees 6-9 sessions/week from AI engines (May 2026 data) — small but trending up
-- **Miyakodeit** sees 12 sessions/90d from AI engines
-- The same brand mentions could equal 10x more downstream traffic if AI surfaces increase queries
+- GA4 AI-referral sessions and observed AI citations answer different questions and must be reported separately
+- A citation snapshot measures only its declared engine/model/locale/variant conditions
+- Do not forecast downstream traffic from mentions unless an explicit, source-backed model is supplied
 - Without tracking we cannot tell whether content changes (Phase 1 retitles, intro rewrites) actually improve AI citation share
 
 ## What this skill tracks
@@ -48,6 +48,20 @@ For each topic cluster (defined in `config/clusters.yml`):
 - Never store the LLM responses themselves — only the extracted citations (privacy + storage)
 - Anonymize the cookie/API key paths in reports — never echo them
 - For Japanese queries, use kanji/kana/romaji variants where natural
+- Persist `ai-citation-snapshot/v1`; reject answer/body/prompt/cookie/key/token/secret fields recursively
+- Every observation must name the canonical `targetId` and tested `variantId`.
+  Same-condition repetition is identified by the engine/model/locale/variant
+  tuple; do not add undeclared fields to the strict v1 artifact
+- One successful run is `AI_CITED_VOLATILE`, never stable.
+  `AI_CITED_STABLE` requires at least three successful repetitions under the
+  same condition
+- Use canonical target count—not wording-variant count—as the share denominator
+- A branded-only sample is a measurement defect and cannot support overall
+  share-of-voice claims
+- `llms.txt` existence is not citation evidence. Only a validated engine
+  observation snapshot can establish mention or citation status
+- Keep AI citation, GSC search visibility, content readiness, and conversion
+  measurement as separate status axes
 
 ## Usage patterns
 
@@ -73,31 +87,40 @@ Captures current citation state for "BizDev 京都", "事業開発 とは", "ビ
 > "京都 IT 勉強会" cluster の競合 citation share を見る
 ```
 
-Outputs: miyakodeit appears in 12 of 30 queries on ChatGPT (40%) vs competitor X at 65%. Gap analysis suggests which competitor pages get cited and why.
+Outputs a condition-scoped citation share with its canonical-target denominator,
+plus competitor evidence and missing-coverage warnings. Never substitute sample
+wording variants for independent targets.
 
 ## Output
 
 ```
 {
-  "snapshot_date": "2026-06-02",
-  "clusters": {
-    "kyoto-it-community": {
-      "queries": 25,
-      "engines": ["chatgpt", "perplexity", "gemini", "ai-overview"],
-      "results": {
-        "chatgpt": {
-          "own_citation_share": "32%",   // 8 of 25
-          "competitor_x_share": "48%",   // 12 of 25
-          "new_mentions_this_week": ["/blog/how-to-join-mokumoku"],
-          "lost_mentions_this_week": []
-        }
-      }
+  "contract": "ai-citation-snapshot/v1",
+  "schemaVersion": 1,
+  "snapshotId": "ai-YYYYMMDD-run",
+  "siteId": "example",
+  "observedAt": "2026-07-29T10:00:00.000Z",
+  "status": "success",
+  "observations": [
+    {
+      "targetId": "A-01",
+      "observedAt": "2026-07-29T10:00:00.000Z",
+      "variantId": "A-01-v1",
+      "engine": "chatgpt",
+      "model": null,
+      "locale": "ja-JP",
+      "runCount": 3,
+      "successCount": 2,
+      "ownMentionCount": 2,
+      "ownCitationCount": 1,
+      "ownCitationUrls": ["https://example.com/decision-page"],
+      "competitorDomains": [],
+      "stability": "volatile",
+      "factCheck": "pass",
+      "snapshotRef": "ai-YYYYMMDD-run"
     }
-  },
-  "alerts": [
-    "miyakodeit lost 1 citation on Perplexity for query 'もくもく会 京都' since 2026-05-26"
   ],
-  "discord_summary_posted": true
+  "providerFailures": []
 }
 ```
 

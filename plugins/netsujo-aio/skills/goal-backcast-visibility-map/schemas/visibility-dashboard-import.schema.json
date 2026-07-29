@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://netsujo.jp/contracts/visibility-dashboard-import-v1.schema.json",
+  "title": "Visibility dashboard import v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "schemaVersion", "siteId", "generatedAt", "registryVersion", "searchIntegration", "searchSnapshotId", "aiIntegration", "aiSnapshotId", "rows"],
+  "properties": {
+    "contract": { "const": "visibility-dashboard-import/v1" },
+    "schemaVersion": { "const": 1 },
+    "siteId": { "type": "string", "minLength": 1 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "registryVersion": { "type": "string", "minLength": 1 },
+    "searchIntegration": { "enum": ["measured", "empty", "not_configured", "permission_denied", "error"] },
+    "searchSnapshotId": { "type": ["string", "null"], "minLength": 1 },
+    "aiIntegration": { "enum": ["measured", "partial", "unmeasured", "error"] },
+    "aiSnapshotId": { "type": ["string", "null"], "minLength": 1 },
+    "rows": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/row" }
+    }
+  },
+  "$defs": {
+    "row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["targetId", "searchStatus", "aiStatus", "contentReadiness", "conversionStatus"],
+      "properties": {
+        "targetId": { "type": "string", "minLength": 1 },
+        "searchStatus": {
+          "enum": ["SEARCH_OWNED", "SEARCH_VISIBLE", "SEARCH_EMERGING", "SEARCH_CTR_GAP", "SEARCH_PAGE_MISMATCH", "SEARCH_CONTENT_GAP", "SEARCH_UNMEASURED"]
+        },
+        "aiStatus": {
+          "enum": ["AI_CITED_STABLE", "AI_CITED_VOLATILE", "AI_MENTION_NO_CITATION", "AI_NOT_CITED", "AI_ANSWER_READY", "AI_CONTENT_PARTIAL", "AI_CONTENT_GAP", "AI_FACT_CONFLICT", "AI_UNMEASURED"]
+        },
+        "contentReadiness": { "enum": ["ready", "partial", "gap", "unmeasured"] },
+        "conversionStatus": { "enum": ["connected", "unconnected", "unmeasured"] }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "searchIntegration": { "enum": ["measured", "empty"] } },
+        "required": ["searchIntegration"]
+      },
+      "then": { "properties": { "searchSnapshotId": { "type": "string", "minLength": 1 } } },
+      "else": { "properties": { "searchSnapshotId": { "type": "null" } } }
+    },
+    {
+      "if": {
+        "properties": { "aiIntegration": { "enum": ["measured", "partial"] } },
+        "required": ["aiIntegration"]
+      },
+      "then": { "properties": { "aiSnapshotId": { "type": "string", "minLength": 1 } } },
+      "else": { "properties": { "aiSnapshotId": { "type": "null" } } }
+    }
+  ]
+}

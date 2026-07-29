@@ -1,0 +1,64 @@
+{
+  "contract": "visibility-targets/v1",
+  "schemaVersion": 1,
+  "registryVersion": "2026-07-29",
+  "generatedAt": "2026-07-29T10:00:00.000Z",
+  "goals": [
+    {
+      "id": "NG-01",
+      "siteId": "netsujo",
+      "label": "SIGNALの適格相談",
+      "actor": "BtoB企業のWeb責任者",
+      "decision": "改善推進を依頼するか",
+      "conversionIds": ["cv-qualified-lead"]
+    }
+  ],
+  "targets": [
+    {
+      "id": "N-S-19",
+      "siteId": "netsujo",
+      "kind": "search_keyword",
+      "clusterId": "signal-aio",
+      "goalId": "NG-01",
+      "text": "AIO 対策 会社 BtoB",
+      "variants": ["BtoB AIO 対策会社"],
+      "locale": "ja-JP",
+      "branded": false,
+      "persona": "BtoB企業のWeb責任者",
+      "intent": "comparison",
+      "funnelStage": "decide",
+      "priority": "P0",
+      "targetUrl": "https://netsujo.jp/services/signal",
+      "gapReason": null,
+      "evidenceUrls": ["https://netsujo.jp/services/signal"],
+      "ctaEventNames": ["signal_consultation_booked"],
+      "owner": "web",
+      "active": true,
+      "createdAt": "2026-07-28T00:00:00.000Z",
+      "updatedAt": "2026-07-29T00:00:00.000Z"
+    },
+    {
+      "id": "N-A-11",
+      "siteId": "netsujo",
+      "kind": "ai_question",
+      "clusterId": "signal-aio",
+      "goalId": "NG-01",
+      "text": "BtoBサイトをAIの比較候補へ出やすくするには何を直すべき？",
+      "variants": ["BtoB企業がAI検索向けに直すべき点は？"],
+      "locale": "ja-JP",
+      "branded": false,
+      "persona": "BtoB企業のWeb責任者",
+      "intent": "comparison",
+      "funnelStage": "evaluate",
+      "priority": "P0",
+      "targetUrl": "https://netsujo.jp/services/signal",
+      "gapReason": null,
+      "evidenceUrls": ["https://netsujo.jp/services/signal"],
+      "ctaEventNames": ["signal_consultation_booked"],
+      "owner": "web",
+      "active": true,
+      "createdAt": "2026-07-28T00:00:00.000Z",
+      "updatedAt": "2026-07-29T00:00:00.000Z"
+    }
+  ]
+}

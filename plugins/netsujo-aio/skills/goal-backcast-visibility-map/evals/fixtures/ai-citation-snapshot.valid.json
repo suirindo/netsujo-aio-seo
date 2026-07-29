@@ -1,0 +1,28 @@
+{
+  "contract": "ai-citation-snapshot/v1",
+  "schemaVersion": 1,
+  "snapshotId": "ai-20260729-a1",
+  "siteId": "netsujo",
+  "observedAt": "2026-07-29T10:00:00.000Z",
+  "status": "success",
+  "observations": [
+    {
+      "targetId": "N-A-11",
+      "observedAt": "2026-07-29T10:00:00.000Z",
+      "engine": "chatgpt",
+      "model": null,
+      "locale": "ja-JP",
+      "variantId": "N-A-11-v1",
+      "runCount": 3,
+      "successCount": 3,
+      "ownMentionCount": 3,
+      "ownCitationCount": 3,
+      "ownCitationUrls": ["https://netsujo.jp/services/signal"],
+      "competitorDomains": [],
+      "stability": "stable",
+      "factCheck": "pass",
+      "snapshotRef": "ai-20260729-a1"
+    }
+  ],
+  "providerFailures": []
+}

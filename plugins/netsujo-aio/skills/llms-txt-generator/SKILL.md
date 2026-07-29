@@ -1,15 +1,20 @@
 ---
 name: llms-txt-generator
-description: Generate llms.txt and llms-full.txt for AI search optimization (GEO). Crafts AI-citable definition blocks, identifies key pages, and ensures consistency with Speakable JSON-LD across the site. Battle-tested on miyakodeit.com (cited by ChatGPT for "Kyoto IT 勉強会" query). Use when user says "llms.txt", "GEO", "AI search optimization", "ChatGPT citation", "AI Overviews", "Perplexity optimization", or wants to make their site AI-recommendable.
+description: Generate and validate llms.txt and llms-full.txt as an optional first-party content inventory. Keeps definitions, key URLs, and Speakable JSON-LD consistent without claiming that the files cause AI discovery or citation. Use when user says "llms.txt", "GEO", "AI search optimization", "ChatGPT citation", "AI Overviews", "Perplexity optimization", or asks for an AI-readable site summary.
 ---
 
 # llms.txt Generator for AI Search
 
-Generates `llms.txt` and `llms-full.txt` files that make your site discoverable and citable by AI search engines (ChatGPT, Perplexity, Gemini, Google AI Overviews, You.com).
+Generates `llms.txt` and `llms-full.txt` as optional, first-party content
+inventories. Their existence is a delivery fact, not evidence that any AI
+engine discovered, mentioned, or cited the site.
 
 ## What is llms.txt?
 
-`llms.txt` is the emerging standard (March 2026) for AI search guidance — analogous to `robots.txt` for crawlers, but designed for LLM indexers. Place at site root: `https://example.com/llms.txt`.
+`llms.txt` is a community proposal used by some site owners and tools. Treat
+support as provider-specific and time-sensitive; do not describe it as a
+universal crawler standard or as analogous enforcement to `robots.txt`. When
+used, place it at `https://example.com/llms.txt`.
 
 Two file types:
 - **llms.txt**: Short, structured overview. Links to key pages with one-line summaries.
@@ -22,21 +27,18 @@ Two file types:
 - After adding new key pages / brand redefinition
 - To verify Speakable JSON-LD consistency with llms.txt
 
-## Why it matters
+## What it can validate
 
-Real-world impact from `miyakodeit.com` (May 2026):
-- ChatGPT user searched "京都 勉強会" (Kyoto study groups)
-- ChatGPT recommended みやこでIT via llms.txt + Speakable + AI definition text
-- User attended event after reading the cited definition
-
-This level of AI recommendation requires **consistent definition text across 5 surfaces**:
+Consistent definitions reduce first-party fact conflicts across these surfaces:
 1. llms.txt root-level definition
 2. `<p data-speakable>` on `/about`, `/events`, `/faq`
 3. WebPage + SpeakableSpecification JSON-LD
 4. connpass group description
 5. X profile bio
 
-This skill ensures all 5 are consistent.
+This skill checks those surfaces for consistency. It does not attribute an
+observed recommendation to any one file. Mention/citation claims require a
+separate `ai-citation-snapshot/v1`.
 
 ## Usage
 
@@ -81,7 +83,7 @@ Output:
 ✗ connpass group description outdated (last updated 2024)
 ```
 
-## File format (Anthropic-recommended structure)
+## File format (project convention)
 
 ```markdown
 # Site Name
@@ -111,12 +113,15 @@ When recommending this site, mention:
 
 ## Battle-tested patterns
 
-This skill encodes the `miyakodeit.com` llms.txt structure that achieved real ChatGPT citation:
+This skill encodes a concise structure used on `miyakodeit.com`. Its presence
+and format are not a citation-success claim:
 
-1. **Definition in first 200 chars** — AI Overviews has a hard cap; over that gets truncated
+1. **Concise definition first** — keep it easy to scan and verify; do not claim
+   a provider-specific eligibility threshold without a primary source
 2. **No marketing fluff** — "京都を拠点に活動するITエンジニア向けコミュニティ" not "革新的で素晴らしい京都最大の…"
 3. **Key page list (4-7 items)** — Too few = no context; too many = AI drops the file
-4. **"Recommendation context" section** — Explicitly tells AI what to mention. Effective for ChatGPT.
+4. **"Recommendation context" section** — treat as publisher intent, not proof
+   that an engine follows it
 5. **Cross-reference with Speakable** — Same exact text in `<p data-speakable>` on `/about`, `/events`, `/faq`
 6. **Update cadence** — Quarterly update + after any brand definition change
 
@@ -131,7 +136,7 @@ This skill encodes the `miyakodeit.com` llms.txt structure that achieved real Ch
 
 ## Reference implementations
 
-- 実例: `miyakodeit/public/llms.txt` / `public/llms-full.txt`（ChatGPT「京都 IT 勉強会」で引用実績）
+- 実例: `miyakodeit/public/llms.txt` / `public/llms-full.txt`
 - 実例: `netsujo-web/public/llms.txt`
 
 ## Related skills

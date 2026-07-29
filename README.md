@@ -5,12 +5,12 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-Plugin-blue)](https://claude.ai/claude-code)
-![Version](https://img.shields.io/badge/version-0.2.0--dev-orange)
-![Skills](https://img.shields.io/badge/skills-12%2F12-brightgreen)
+![Version](https://img.shields.io/badge/version-0.5.0-brightgreen)
+![Skills](https://img.shields.io/badge/skills-21%2F21-brightgreen)
 
 ## What this is
 
-`netsujo-aio-seo` is a Claude Code plugin marketplace that packages the AIO/SEO patterns developed and dogfooded at [Netsujo Inc.](https://netsujo.jp) over 6+ months on production sites with real Google Search Console signals and ChatGPT citation evidence.
+`netsujo-aio-seo` is a Claude Code plugin marketplace that packages the AIO/SEO patterns developed and dogfooded at [Netsujo Inc.](https://netsujo.jp) on production sites with Google Search Console signals, condition-scoped AI citation snapshots, and versioned first-party fact pipelines.
 
 Unlike generic SEO plugins, this one is opinionated for:
 - **Next.js 15 App Router** + Server/Client Component patterns
@@ -23,7 +23,7 @@ Unlike generic SEO plugins, this one is opinionated for:
 | Problem | This plugin's answer |
 |---|---|
 | "Our FAQ schema isn't appearing as rich result" | `jsonld-faqpage` validates against Schema.org spec + Google constraints, including the often-missed "no duplicate questions across pages" rule |
-| "We want ChatGPT to recommend our site" | `llms-txt-generator` enforces consistency across llms.txt, Speakable JSON-LD, connpass description, X bio — the 5 surfaces ChatGPT actually reads |
+| "We want to measure AI recommendations" | `goal-backcast-visibility-map` + `ai-citation-tracker` keep content readiness separate from repeated, condition-scoped citation observations |
 | "GSC says Discovered, not indexed for 30 URLs" | `gsc-weekly-audit` catches this in the first scan, with battle-tested patterns from real incidents (see [BATTLE_TESTED.md](BATTLE_TESTED.md)) |
 | "Our Japanese H1 breaks oddly on mobile" | `h1-mobile-check` (coming v0.2) enforces the 15-char H1 limit with `<br />` placement validation |
 | "Different SEO advisors give different scores" | `three-gate-review` runs CTO / Designer / CEO subagents in parallel for objective approval |
@@ -59,11 +59,13 @@ This runs:
 3. llms.txt consistency check
 4. CTR low pages report
 
-## Skills included (12 shipped)
+## Skills included (21 shipped)
 
 ### Audit & diagnosis
 
 - **`gsc-weekly-audit`** — Google Search Console comprehensive audit (8 checks)
+- **`indexation-recovery`** — Diagnose and recover indexation gaps without treating zero impressions as proof
+- **`bing-indexnow`** — Submit changed URLs through IndexNow
 
 ### Structured data (JSON-LD)
 
@@ -76,7 +78,10 @@ This runs:
 
 ### AIO/GEO
 
-- **`llms-txt-generator`** — Generate + verify llms.txt for AI search citation
+- **`goal-backcast-visibility-map`** — Backcast from approved goals into versioned search/AI targets and strict import contracts
+- **`ai-citation-tracker`** — Capture citation metadata without storing answer bodies or secrets
+- **`passage-citability-checker`** — Score content readiness without forecasting citation lift
+- **`llms-txt-generator`** — Generate + verify llms.txt consistency without treating it as citation evidence
 
 ### GA4
 
@@ -87,12 +92,10 @@ This runs:
 
 - **`h1-mobile-check`** — 375px H1 break detection with bunsetsu-aware `<br />` suggestion
 - **`jp-ascii-space-fix`** — Context-aware remover of half-width spaces between ASCII and CJK (skips code blocks, HTML attributes)
-
-### Planned for v0.3.x
-
-- `three-gate-review` — CTO / Designer / CEO subagent review
-- `gsc-url-inspect` — One-shot URL inspection for new routes
-- `sitemap-resubmit` — Submit sitemap.xml via Sitemaps API
+- **`link-integrity-tester`** — Validate route existence and link intent
+- **`content-fact-validator`** — Block unsupported facts and broken mutable-statistic lineage
+- **`schema-validator`** — Validate JSON-LD shape, facts, and graph references
+- **`pre-merge-test-suite`** — Orchestrate build, facts, contracts, schema, links, and visual checks
 
 ## Roadmap
 
@@ -100,7 +103,8 @@ This runs:
 - **v0.2.0 phase 1** (2026-05): 7 skills — adds jsonld-organization / jsonld-article / h1-mobile-check / jp-ascii-space-fix
 - **v0.2.0 phase 2** (2026-05, **current**): **12 skills** — adds jsonld-event / jsonld-breadcrumb / jsonld-speakable / ga4-custom-dimensions / ga4-tracking-wiring
 - **v0.2.0 release** (2026-06): Anthropic claude-plugins-community submission
-- **v0.3.x** (2026-07+): three-gate-review / gsc-url-inspect / sitemap-resubmit
+- **v0.3.0–v0.4.0** (2026-06–07): citation, indexation, schema, fact, and pre-merge skills
+- **v0.5.0** (2026-07, **current**): **21 skills** — goal-backcast visibility registry, four strict v1 contracts, 18 policy evals, canonical snapshot lineage
 - **v1.0.0** (2026-10): Production-ready with `netsujo-aio-strapi` sub-package
 
 ## Relationship to other plugins
@@ -147,7 +151,7 @@ MIT © 2026 [Netsujo Inc.](https://netsujo.jp)
 
 ## About Netsujo Inc.
 
-Netsujo is a Kyoto-based BizDev company specializing in Web3, AI, and software implementation. We run [みやこでIT](https://www.miyakodeit.com), Kyoto's largest IT engineer community (564 members, 155+ events).
+Netsujo is a Kyoto-based BizDev company specializing in Web3, AI, and software implementation. We run [みやこでIT](https://www.miyakodeit.com), a Kyoto IT engineer community. Current community statistics are published through its versioned canonical snapshot rather than hard-coded here.
 
 This plugin packages the patterns we developed to keep our own sites GSC-clean and AI-citable. We hope it helps yours too.
 
