@@ -166,3 +166,11 @@ When a new lessons-learned doc is added, update this skill's stages to include d
 - 2026-06-04 lessons-learned (fabrication + link mismatch double incident)
 - `feedback_verification.md`
 - `feedback_review_gates.md`
+
+## SIGNAL 変更を含む PR
+
+変更ファイルに `src/lib/signal*` / `src/app/**signal*` / SIGNAL 系 migration / feature flag が
+含まれる場合、上記に加えて **プロジェクトスキル `signal-release-gate`**
+（現正本: `netsujo-web/.claude/skills/signal-release-gate/SKILL.md`）を必ず実行する。
+（netsujo-web はコードとしては read-only の歴史参照だが、このスキルの正本は 2026-10-23 時点で
+まだ netsujo-web 側にある。`suirindo/netsujo-signal` への移植が済んだらこの参照を更新する）
