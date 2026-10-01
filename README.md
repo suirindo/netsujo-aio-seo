@@ -25,7 +25,7 @@ Unlike generic SEO plugins, this one is opinionated for:
 | "Our FAQ schema isn't appearing as rich result" | `jsonld-faqpage` validates against Schema.org spec + Google constraints, including the often-missed "no duplicate questions across pages" rule |
 | "We want to measure AI recommendations" | `goal-backcast-visibility-map` + `ai-citation-tracker` keep content readiness separate from repeated, condition-scoped citation observations |
 | "GSC says Discovered, not indexed for 30 URLs" | `gsc-weekly-audit` catches this in the first scan, with battle-tested patterns from real incidents (see [BATTLE_TESTED.md](BATTLE_TESTED.md)) |
-| "Our Japanese H1 breaks oddly on mobile" | `h1-mobile-check` (coming v0.2) enforces the 15-char H1 limit with `<br />` placement validation |
+| "Our Japanese H1 breaks oddly on mobile" | `h1-mobile-check` enforces the 15-char H1 limit with `<br />` placement validation |
 | "Different SEO advisors give different scores" | `three-gate-review` runs CTO / Designer / CEO subagents in parallel for objective approval |
 
 ## Installation
@@ -101,7 +101,7 @@ This runs:
 
 - **v0.1.0** (2026-05): 3 skills MVP — gsc-weekly-audit / jsonld-faqpage / llms-txt-generator
 - **v0.2.0 phase 1** (2026-05): 7 skills — adds jsonld-organization / jsonld-article / h1-mobile-check / jp-ascii-space-fix
-- **v0.2.0 phase 2** (2026-05, **current**): **12 skills** — adds jsonld-event / jsonld-breadcrumb / jsonld-speakable / ga4-custom-dimensions / ga4-tracking-wiring
+- **v0.2.0 phase 2** (2026-05): **12 skills** — adds jsonld-event / jsonld-breadcrumb / jsonld-speakable / ga4-custom-dimensions / ga4-tracking-wiring
 - **v0.2.0 release** (2026-06): Anthropic claude-plugins-community submission
 - **v0.3.0–v0.4.0** (2026-06–07): citation, indexation, schema, fact, and pre-merge skills
 - **v0.5.0** (2026-07, **current**): **21 skills** — goal-backcast visibility registry, four strict v1 contracts, 18 policy evals, canonical snapshot lineage
@@ -137,7 +137,7 @@ Most skills require API credentials. See [SETUP.md](SETUP.md):
 
 ## Contributing
 
-Pull requests welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) (TBA v0.2).
+Pull requests welcome.
 
 For issues with specific skills, open an issue with:
 - Skill name and version
