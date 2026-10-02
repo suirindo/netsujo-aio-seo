@@ -2,6 +2,7 @@
 """Review rendered Japanese lines, not source-code newlines. MIT License."""
 import argparse
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -20,14 +21,18 @@ def utf16_slice(text, start, end):
     return text.encode('utf-16-le')[start * 2:end * 2].decode('utf-16-le')
 
 
+def finite(value):
+    return type(value) in (int, float) and math.isfinite(value)
+
+
 def review(data):
     findings = []
 
     def emit(level, code, target, line=None, detail=''):
         findings.append(dict(level=level, code=code, target=target, line=line, detail=detail))
 
-    if not isinstance(data, dict) or data.get('schemaVersion') != 1 or not isinstance(data.get('elements'), list) or not data['elements']:
-        emit('invalid', 'missing-evidence', '', detail='Require schemaVersion=1 and nonempty elements.')
+    if not isinstance(data, dict) or data.get('schemaVersion') != 2 or not isinstance(data.get('elements'), list) or not data['elements']:
+        emit('invalid', 'missing-evidence', '', detail='Require schemaVersion=2, measured line widths and nonempty elements.')
         return findings
     for index, el in enumerate(data['elements']):
         if not isinstance(el, dict):
@@ -40,6 +45,12 @@ def review(data):
             emit('invalid', 'missing-required-fields', target); continue
         if el['unsupported']:
             emit('invalid', 'unsupported-layout', target, detail=str(el['unsupported']))
+        measure = el.get('measure')
+        if not isinstance(measure, dict) or not finite(measure.get('fontSizePx')) or measure['fontSizePx'] <= 0 or 'maxLineEm' not in measure or (measure['maxLineEm'] is not None and (not finite(measure['maxLineEm']) or measure['maxLineEm'] <= 0)):
+            emit('invalid', 'invalid-measure-evidence', target); continue
+        font_size, budget = measure['fontSizePx'], measure['maxLineEm']
+        if budget is None and el.get('surface') in ('body', 'lead'):
+            emit('invalid', 'missing-line-measure-budget', target); continue
         total, previous_end, valid = utf16_len(text), 0, True
         for n, line in enumerate(lines, 1):
             try:
@@ -47,6 +58,9 @@ def review(data):
                 if type(start) is not int or type(end) is not int or not previous_end == start < end <= total or not isinstance(line['text'], str) or utf16_slice(text, start, end) != line['text']:
                     raise ValueError()
                 previous_end = end
+                left, right, width = line['left'], line['right'], line['widthPx']
+                if not all(finite(v) for v in (left, right, width)) or width <= 0 or right < left or abs((right - left) - width) > 0.5:
+                    raise ValueError()
             except (KeyError, TypeError, ValueError, UnicodeError):
                 valid = False
                 emit('invalid', 'invalid-line-coverage', target, n)
@@ -68,6 +82,8 @@ def review(data):
                 emit('invalid', 'invalid-protected-span', target)
         for n, line in enumerate(lines, 1):
             current = line['text'].strip()
+            if budget is not None and line['widthPx'] / font_size > budget + 0.25:
+                emit('review', 'overlong-line', target, n, f"{line['widthPx'] / font_size:.2f}em exceeds {budget:g}em; review the text column and reading rhythm.")
             if not current:
                 emit('review', 'blank-rendered-line', target, n); continue
             if current[0] in PUNCTUATION_HEAD:

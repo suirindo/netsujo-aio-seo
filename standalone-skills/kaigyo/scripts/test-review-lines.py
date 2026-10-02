@@ -15,12 +15,14 @@ def evidence(parts, surface='body', phrases=(), overflow=False):
     start, lines = 0, []
     for part in parts:
         end = start + mod.utf16_len(part)
-        lines.append(dict(text=part, start=start, end=end)); start = end
+        # Synthetic fixture geometry only; this is not rendering evidence.
+        width = max(16, len(part) * 16)
+        lines.append(dict(text=part, start=start, end=end, left=0, right=width, widthPx=width)); start = end
     spans = []
     for phrase in phrases:
         a = text.index(phrase)
         spans.append(dict(text=phrase, start=mod.utf16_len(text[:a]), end=mod.utf16_len(text[:a+len(phrase)])))
-    return dict(schemaVersion=1, elements=[dict(text=text, lines=lines, protectedSpans=spans, overflow=overflow, unsupported=[], surface=surface)])
+    return dict(schemaVersion=2, elements=[dict(text=text, lines=lines, measure=dict(fontSizePx=16, maxLineEm=36 if surface=='lead' else 40), protectedSpans=spans, overflow=overflow, unsupported=[], surface=surface)])
 
 
 class ReviewTests(unittest.TestCase):
@@ -58,7 +60,7 @@ class ReviewTests(unittest.TestCase):
         self.assertEqual(1, mod.exit_code(mod.review(evidence(['事業を紹介します。'], overflow=True))))
 
     def test_empty_evidence_invalid(self):
-        self.assertEqual(2, mod.exit_code(mod.review(dict(schemaVersion=1, elements=[]))))
+        self.assertEqual(2, mod.exit_code(mod.review(dict(schemaVersion=2, elements=[]))))
 
     def test_empty_text_invalid(self):
         self.assertEqual(2, mod.exit_code(mod.review(evidence([' ']))))
@@ -94,6 +96,37 @@ class ReviewTests(unittest.TestCase):
 
     def test_schema_not_inferred(self):
         self.assertEqual(2, mod.exit_code(mod.review({'elements':[]})))
+
+    def test_wide_line_without_bad_boundary_requires_review(self):
+        self.assertIn('overlong-line', self.codes(evidence(['読みやすい文章を届けます。' * 4])))
+
+    def test_short_text_in_wide_box_is_not_overlong(self):
+        data = evidence(['会社概要'])
+        data['elements'][0]['box'] = dict(width=1280)
+        self.assertNotIn('overlong-line', self.codes(data))
+
+    def test_longest_line_not_hidden_by_short_tail(self):
+        self.assertIn('overlong-line', self.codes(evidence(['読みやすい文章を届けます。' * 4, '続きます。'])))
+
+    def test_missing_measure_invalid(self):
+        data = evidence(['紹介します。']); del data['elements'][0]['measure']
+        self.assertEqual(2, mod.exit_code(mod.review(data)))
+
+    def test_nan_geometry_invalid(self):
+        data = evidence(['紹介します。']); data['elements'][0]['lines'][0]['widthPx'] = float('nan')
+        self.assertEqual(2, mod.exit_code(mod.review(data)))
+
+    def test_inconsistent_width_invalid(self):
+        data = evidence(['紹介します。']); data['elements'][0]['lines'][0]['right'] += 100
+        self.assertEqual(2, mod.exit_code(mod.review(data)))
+
+    def test_body_cannot_drop_measure_budget(self):
+        data = evidence(['紹介します。']); data['elements'][0]['measure']['maxLineEm'] = None
+        self.assertEqual(2, mod.exit_code(mod.review(data)))
+
+    def test_old_schema_cannot_pass(self):
+        data = evidence(['紹介します。']); data['schemaVersion'] = 1
+        self.assertEqual(2, mod.exit_code(mod.review(data)))
 
 
 if __name__ == '__main__':

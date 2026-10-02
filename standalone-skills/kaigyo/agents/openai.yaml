@@ -1,0 +1,4 @@
+interface:
+  display_name: "kaigyo — Netsujo"
+  short_description: "日本語の意味の切れ目と読みやすい行幅を整え、実表示で不自然な改行を検証する"
+  default_prompt: "Use $kaigyo to improve Japanese line length and wrapping, then verify the rendered result."

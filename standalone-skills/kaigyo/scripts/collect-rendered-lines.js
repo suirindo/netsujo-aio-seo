@@ -11,10 +11,16 @@
     if (targets.length < minimum) throw new Error(`Matched ${targets.length} targets; expected at least ${minimum}.`);
     if (targets.some(a => targets.some(b => a !== b && a.contains(b)))) throw new Error('Select non-overlapping text blocks.');
     if (options.protected && (!Array.isArray(options.protected) || options.protected.some(x => typeof x !== 'string' || !x))) throw new Error('protected must contain nonempty strings.');
+    if (options.maxLineEm != null && (!Number.isFinite(options.maxLineEm) || options.maxLineEm <= 0)) throw new Error('maxLineEm must be a finite positive number.');
     const segmenter = typeof Intl.Segmenter === 'function' ? new Intl.Segmenter('ja', { granularity: 'grapheme' }) : null;
     const elements = targets.map((el, index) => {
       const style = getComputedStyle(el), box = el.getBoundingClientRect();
       const unsupported = new Set();
+      const surface = el.dataset.jaSurface || (/^H[1-6]$/.test(el.tagName) ? 'heading' : 'body');
+      const fontSizePx = parseFloat(style.fontSize);
+      const maxLineEm = el.dataset.jaMaxLineEm != null ? Number(el.dataset.jaMaxLineEm) : options.maxLineEm ?? ({ body: 40, lead: 36 }[surface] ?? null);
+      if (!Number.isFinite(fontSizePx) || fontSizePx <= 0) unsupported.add('invalid font size');
+      if (maxLineEm !== null && (!Number.isFinite(maxLineEm) || maxLineEm <= 0)) unsupported.add('invalid line measure budget');
       if (!segmenter) unsupported.add('Intl.Segmenter unavailable');
       if (style.writingMode !== 'horizontal-tb') unsupported.add('non-horizontal writing');
       if (style.columnCount !== 'auto' && Number(style.columnCount) > 1) unsupported.add('multiple columns');
@@ -64,8 +70,10 @@
           const previous = lines.at(-1);
           if (previous && Math.abs(previous.y - r.top) < 2) {
             previous.text += part.segment; previous.end = offset + part.segment.length;
+            previous.left = Math.min(previous.left, r.left); previous.right = Math.max(previous.right, r.right);
+            previous.widthPx = previous.right - previous.left;
           } else {
-            lines.push({ text: pending + part.segment, start: offset - pending.length, end: offset + part.segment.length, y: r.top });
+            lines.push({ text: pending + part.segment, start: offset - pending.length, end: offset + part.segment.length, y: r.top, left: r.left, right: r.right, widthPx: r.right - r.left });
             pending = '';
           }
         }
@@ -82,8 +90,8 @@
       }
       const missingProtected = el.dataset.jaProtect ? phrases.filter(p => !text.includes(p) && !options.protected?.includes(p)) : [];
       if (missingProtected.length) unsupported.add('declared local protected phrase missing');
-      return { target: el.id ? `#${el.id}` : `${selector}[${index}]`, surface: el.dataset.jaSurface || (/^H[1-6]$/.test(el.tagName) ? 'heading' : 'body'), text, lines, protectedSpans, overflow, unsupported: [...unsupported], styles: { font: style.font, wordBreak: style.wordBreak, lineBreak: style.lineBreak, whiteSpace: style.whiteSpace }, box: { width: box.width, height: box.height } };
+      return { target: el.id ? `#${el.id}` : `${selector}[${index}]`, surface, text, lines, measure: { fontSizePx, maxLineEm }, protectedSpans, overflow, unsupported: [...unsupported], styles: { font: style.font, wordBreak: style.wordBreak, lineBreak: style.lineBreak, whiteSpace: style.whiteSpace }, box: { width: box.width, height: box.height } };
     });
-    return { schemaVersion: 1, viewport: { width: innerWidth, height: innerHeight, dpr: devicePixelRatio }, elements };
+    return { schemaVersion: 2, viewport: { width: innerWidth, height: innerHeight, dpr: devicePixelRatio }, elements };
   };
 })(globalThis);
