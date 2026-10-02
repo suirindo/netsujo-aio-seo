@@ -41,8 +41,18 @@ class ReviewTests(unittest.TestCase):
     def test_selected_phrase_intact(self):
         self.assertEqual([], self.codes(evidence(['事業を紹介します。', '3つの事例を、ご覧ください。'], phrases=['3つの事例を、'])))
 
-    def test_body_word_split_allowed(self):
-        self.assertEqual([], self.codes(evidence(['この文章は日本語の本文を読', 'み進めるための長い説明です。'])))
+    def test_body_bunsetsu_boundary_retains_normal_wrapping(self):
+        self.assertEqual([], self.codes(evidence(['この文章は日本語の本文を', '読み進めるための長い説明です。'])))
+
+    def test_fixed_tail_guard_cannot_split_contract_compound(self):
+        data = evidence(['個別契', '約に従う'], phrases=['個別契約に従う'])
+        self.assertIn('protected-span-split', self.codes(data))
+        self.assertEqual(1, mod.exit_code(mod.review(data)))
+
+    def test_fixed_tail_guard_cannot_split_completion_compound(self):
+        data = evidence(['完了条', '件つき'], phrases=['完了条件つき'])
+        self.assertIn('protected-span-split', self.codes(data))
+        self.assertEqual(1, mod.exit_code(mod.review(data)))
 
     def test_tiny_display_tail(self):
         self.assertIn('tiny-display-tail', self.codes(evidence(['利用できま', 'す。'], surface='heading')))

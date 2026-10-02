@@ -16,5 +16,6 @@ Validate on fresh artifacts without supplying expected fixes. Include headings, 
 12. A whole-site completion request with only two inspected paragraphs; retain missing coverage and the production-bound release gate.
 13. A body paragraph whose last line contains only `す。`; block acceptance despite zero overflow. Contrast it with a standalone `はい` label that has no continuation.
 14. Public marketing, blog and SIGNAL UI with different owners/templates; inventory all three rather than treating a company-profile fix as completion.
+15. A fixed four-character tail guard producing `個別契｜約に従う` or `完了条｜件つき`; reject the new compound break even when the final line has more than two characters and overflow is zero.
 
 Run `python3 scripts/test-review-lines.py` and `node scripts/test-collector.cjs` for script regression. The second uses synthetic Range geometry and is **not** a real browser/font/layout test. If an actual browser and Playwright are available, run `node scripts/test-browser.cjs` as well. Record synthetic and actual-render results separately. Passing tests never proves naturalness for every sentence.
