@@ -92,6 +92,8 @@ def review(data):
                 emit('review', 'punctuation-end', target, n, current[-12:])
             if n > 1 and PARTICLE.match(current):
                 emit('review', 'particle-head-candidate', target, n, lines[n-2]['text'][-12:] + '｜' + current[:12])
+            if n > 1 and len(current) <= 2:
+                emit('review', 'tiny-continuation-line', target, n, current)
         if el.get('surface') in ('heading', 'label', 'caption', 'lead') and len(lines) > 1:
             tail = lines[-1]['text'].strip()
             if len(tail) <= 3:
@@ -113,7 +115,7 @@ def main():
         findings = review(json.loads(args.evidence.read_text(encoding='utf-8')))
     except (OSError, ValueError, UnicodeError) as exc:
         findings = [dict(level='invalid', code='unreadable-evidence', detail=str(exc))]
-    print(json.dumps({'automatedStatus': 'NO_AUTOMATED_FINDINGS' if not findings else 'NEEDS_REVIEW', 'findings': findings, 'requiresSemanticAndVisualReview': True}, ensure_ascii=False, indent=2))
+    print(json.dumps({'automatedStatus': 'NO_AUTOMATED_FINDINGS' if not findings else 'BLOCKED', 'findings': findings, 'requiresSemanticAndVisualReview': True}, ensure_ascii=False, indent=2))
     return exit_code(findings)
 
 

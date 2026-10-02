@@ -66,7 +66,7 @@ Some browser tools expose only read-only DOM snapshots/styles and omit Range or 
 python3 /absolute/skill/path/scripts/review-lines.py evidence.json
 ```
 
-Exit `0`: no automated findings, still require screenshot and semantic review. Exit `1`: confirmed issue or unresolved editorial candidate. Exit `2`: missing, invalid or unsupported evidence. Record contextual acceptance separately and tie it to the exact artifact/width; there is no blanket waiver flag.
+Exit `0`: no automated findings, still require screenshot and review of every semantic boundary. Exit `1`: acceptance blocked by a confirmed issue or unresolved editorial candidate, including a 1–2-character continuation line in body copy. Exit `2`: missing, invalid or unsupported evidence. Record contextual acceptance separately and tie it to the exact artifact/width; there is no blanket waiver flag. Confirmed particle/bunsetsu/name/compound/product/role/number-unit splits must be repaired. The linter does not infer complete Japanese grammar: explicitly review and declare the target's meaning units before treating the rendered result as verified.
 
 ## Limits
 

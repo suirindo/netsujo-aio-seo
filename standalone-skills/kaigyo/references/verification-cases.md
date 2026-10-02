@@ -4,7 +4,7 @@ Validate on fresh artifacts without supplying expected fixes. Include headings, 
 
 1. A lead paragraph with a particle starting its second line; preserve approved wording at several widths.
 2. A mobile heading with a company name and price; preserve both without overflow.
-3. A long article with ordinary word-internal wrapping; avoid unnecessary grouping and whitespace.
+3. A long article with split compound terms, role names and noun-particle units; repair the meaningful units while avoiding unnecessary grouping and whitespace.
 4. An independent word beginning with `も`, such as `もっと`; avoid a false grammatical rejection.
 5. Explicit breaks and soft wrapping; distinguish source inspection from screenshot-only inference.
 6. A protected phrase wider than the box; reject blanket nowrap as a sufficient fix.
@@ -14,5 +14,7 @@ Validate on fresh artifacts without supplying expected fixes. Include headings, 
 10. A short label inside a wide container; distinguish occupied line width from box width and avoid a false overlong-line rejection.
 11. A mixed Japanese/Latin paragraph; use measured line width rather than character count or `ch` as a Japanese proxy.
 12. A whole-site completion request with only two inspected paragraphs; retain missing coverage and the production-bound release gate.
+13. A body paragraph whose last line contains only `す。`; block acceptance despite zero overflow. Contrast it with a standalone `はい` label that has no continuation.
+14. Public marketing, blog and SIGNAL UI with different owners/templates; inventory all three rather than treating a company-profile fix as completion.
 
 Run `python3 scripts/test-review-lines.py` and `node scripts/test-collector.cjs` for script regression. The second uses synthetic Range geometry and is **not** a real browser/font/layout test. If an actual browser and Playwright are available, run `node scripts/test-browser.cjs` as well. Record synthetic and actual-render results separately. Passing tests never proves naturalness for every sentence.

@@ -19,18 +19,19 @@ Use the Netsujo implementation of `kaigyo`; identify it by its publisher and sou
 
 ## 2. Plan meaningful boundaries before layout
 
-Read the complete sentence, then select short spans whose separation harms this particular surface. Keep the list small and explicit: a prominent noun with its short particle, an inflected predicate, a proper name, a number with its unit. Prefer clause/sentence boundaries when they improve short display copy.
+Read the complete sentence and identify its meaning units before letting the browser wrap it. Treat a particle detached from its preceding phrase, a split bunsetsu such as `〜でも`/`〜を`/`〜が`/`〜に`/`〜で`, and breaks inside proper names, compound terms, product names, role names or numbers with counters/units as defects. Apply this rule to body copy and blogs as well as prominent headings and UI. Record the relevant exact spans for each target; an empty protection list does not establish semantic correctness. Protect the smallest meaningful spans that fit, rather than making an entire sentence unbreakable. Prefer clause/sentence boundaries when they improve short display copy.
 
 | Boundary | Default judgment |
 | --- | --- |
-| `どの関わり方で｜も、` / `3つの事例｜を、` | Repair prominent copy: a particle is detached from its phrase. |
+| `どの関わり方で｜も、` / `3つの事例｜を、` | Must repair: a particle or bunsetsu is split. These two examples are mandatory regressions. |
 | `申し込みできま｜す。` | Repair the conspicuous tiny predicate tail. |
-| `月額7｜万円` / `Netsu｜jo SIGNAL` | Protect the approved value/unit or name if it fits. |
+| `月額7｜万円` / `Netsu｜jo SIGNAL` / `代表取｜締役` | Must repair: protect the approved amount, name or role and verify its fit. |
+| Only 1–2 characters fall onto a continuation line | Default defect on every surface, including body copy. Resolve before completion; accept only a specifically justified intentional standalone unit. |
 | `Webサイトを、｜営業基盤へ。` | Accept an intentional heading boundary if fitting and balanced. |
 | A body sentence stretched across the page with a large eye movement to its next line | Repair the text column even if every break is grammatically acceptable. |
-| A long body paragraph breaking inside a Japanese word | Evaluate in context; do not prohibit ordinary Japanese character wrapping. |
+| A body paragraph splits a meaningful compound or phrase | Repair the confirmed meaning-unit split; normal Japanese wrapping still applies between the reviewed units. |
 
-Do **not** ban every line beginning with `の`, `に`, `を`, `は` or `も`: some are independent words or acceptable prose. Apply grammatical context, prominence and line shape. Treat automated particle matches as review candidates, not linguistic proof. Apply punctuation constraints separately from these editorial choices.
+Do **not** infer a detached particle solely from its first character: `もっと` is an independent word. Read both sides of every boundary and identify the grammatical relationship. Automated matches are candidates, not linguistic proof, but unresolved candidates block acceptance. A confirmed detached particle or meaning-unit split cannot be accepted merely because it occurs in ordinary body copy. Apply punctuation constraints separately from these editorial choices.
 
 Read [references/japanese-review.md](references/japanese-review.md) for Japanese examples. Read [references/web-layout.md](references/web-layout.md) before web changes.
 
@@ -63,9 +64,9 @@ Check **both** line width and boundaries. At every boundary, read the line end a
 
 Do not call typography verified while any condition remains:
 
-1. A selected protected span crosses a rendered line, or content overflows/is clipped.
-2. A line exceeds the declared readable measure, or an editorial candidate is unresolved: repair it or record a specific contextual acceptance tied to the surface and rendered width.
-3. Required render evidence is absent, a selector matches nothing, or collection is unsupported.
+1. A particle is detached from its phrase, a bunsetsu or meaningful name/compound/product/role/number-unit is split, a selected protected span crosses a rendered line, or content overflows/is clipped. Repair confirmed defects; do not waive them as browser behavior or because overflow is zero.
+2. A continuation line contains only 1–2 characters, a line exceeds the declared readable measure, or any editorial candidate is unresolved. Repair it or document a specific intentional standalone unit/readable measure tied to the exact surface, artifact and width. Such a justification must not excuse a confirmed defect in rule 1.
+3. Required render evidence or semantic-boundary review is absent, a selector matches nothing, or collection is unsupported. A zero-warning linter result does not replace reading every boundary.
 
 Iterate and re-render changed targets and affected widths. Zero lint warnings do **not** establish semantic or visual PASS. A skill alone cannot enforce a pipeline: when requested, wire the collector, exit code and reviewed evidence into the project's completion/CI workflow. Do not claim cross-agent rollout from installation in one environment.
 

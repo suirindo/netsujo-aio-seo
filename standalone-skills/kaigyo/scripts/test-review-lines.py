@@ -47,8 +47,28 @@ class ReviewTests(unittest.TestCase):
     def test_tiny_display_tail(self):
         self.assertIn('tiny-display-tail', self.codes(evidence(['利用できま', 'す。'], surface='heading')))
 
-    def test_body_tiny_tail_not_automatically_banned(self):
-        self.assertNotIn('tiny-display-tail', self.codes(evidence(['利用できま', 'す。'])))
+    def test_body_tiny_tail_blocks_acceptance(self):
+        data = evidence(['利用できま', 'す。'])
+        self.assertIn('tiny-continuation-line', self.codes(data))
+        self.assertEqual(1, mod.exit_code(mod.review(data)))
+
+    def test_tiny_middle_continuation_blocks_acceptance(self):
+        self.assertIn('tiny-continuation-line', self.codes(evidence(['紹介します。', '次に', '詳しく説明します。'])))
+
+    def test_short_standalone_text_is_not_a_continuation(self):
+        self.assertNotIn('tiny-continuation-line', self.codes(evidence(['はい'])))
+
+    def test_compound_product_role_and_counter_splits_fail(self):
+        cases = [(['継続改', '善を続けます。'], '継続改善'),
+                 (['Netsu', 'jo SIGNALを紹介します。'], 'Netsujo SIGNAL'),
+                 (['代表取', '締役の紹介です。'], '代表取締役'),
+                 (['実績は3', '件あります。'], '3件')]
+        for parts, phrase in cases:
+            with self.subTest(phrase=phrase):
+                data = evidence(parts, phrases=[phrase])
+                findings = mod.review(data)
+                self.assertTrue(any(x['level']=='fail' and x['code']=='protected-span-split' for x in findings))
+                self.assertEqual(1, mod.exit_code(findings))
 
     def test_punctuation_head(self):
         self.assertIn('punctuation-head', self.codes(evidence(['紹介します', '。続きです。'])))
