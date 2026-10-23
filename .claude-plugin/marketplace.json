@@ -15,7 +15,7 @@
       "name": "netsujo-aio",
       "source": "./plugins/netsujo-aio",
       "description": "21-skill AIO/SEO toolkit with goal-backcast visibility contracts, GSC and AI citation measurement, canonical fact pipelines, JSON-LD, GA4, llms.txt consistency, and Japanese quality gates.",
-      "version": "0.5.1",
+      "version": "0.5.2",
       "category": "seo",
       "tags": [
         "seo",

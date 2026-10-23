@@ -1,6 +1,6 @@
 {
   "name": "netsujo-aio",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Production-ready AIO/SEO toolkit for Next.js + Strapi + Japanese sites. 21 skills covering goal-backcast search/AI visibility contracts, strict citation snapshots, GSC audit, JSON-LD, llms.txt consistency, GA4, IndexNow, indexation recovery, Japanese quality checks, fact validation, and pre-merge gates.",
   "author": {
     "name": "Tomohiro Iida (Netsujo Inc.)",

@@ -170,7 +170,9 @@ When a new lessons-learned doc is added, update this skill's stages to include d
 ## SIGNAL 変更を含む PR
 
 変更ファイルに `src/lib/signal*` / `src/app/**signal*` / SIGNAL 系 migration / feature flag が
-含まれる場合、上記に加えて **プロジェクトスキル `signal-release-gate`**
-（現正本: `netsujo-web/.claude/skills/signal-release-gate/SKILL.md`）を必ず実行する。
-（netsujo-web はコードとしては read-only の歴史参照だが、このスキルの正本は 2026-10-23 時点で
-まだ netsujo-web 側にある。`suirindo/netsujo-signal` への移植が済んだらこの参照を更新する）
+含まれる場合、上記に加えて **プロジェクトスキル `signal-release-gate`** を必ず実行する。
+
+- **現行 SIGNAL SaaS（`suirindo/netsujo-signal`）**: `.claude/skills/signal-release-gate/SKILL.md`
+  （2026-10-23 PR #760 でネイティブ移植済み。こちらが正本）
+- **legacy runtime（旧 monorepo `netsujo-web`）のみ**: `netsujo-web/.claude/skills/signal-release-gate/SKILL.md`
+  （旧マトリクスは legacy 専用。現行 SaaS リポジトリには旧コマンド群が存在しないため流用しない）
