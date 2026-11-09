@@ -1,0 +1,169 @@
+{
+  "schema_version": "0.1",
+  "policy_version": "aio-shadow-trial-v1",
+  "policy": {
+    "capabilities": [
+      "filesystem.write.scoped",
+      "filesystem.read",
+      "review.perform"
+    ],
+    "read_only_forbids": [
+      "filesystem.write.scoped"
+    ]
+  },
+  "roles": [
+    {
+      "contract": {
+        "id": "ci-evidence-writer",
+        "version": 1,
+        "scope": "repository",
+        "status": "active",
+        "aliases": [],
+        "mission": {
+          "objective": "Write the new internal ARC shadow trial evidence report.",
+          "responsibilities": [
+            "Record raw checker results without changing SEO skills."
+          ],
+          "out_of_scope": [
+            "Checkout, installation, CI configuration, SEO checks and runtime authority are not modeled."
+          ],
+          "success_criteria": [
+            "Record actual results and their limits."
+          ]
+        },
+        "contract": {
+          "required_inputs": [
+            "scope"
+          ],
+          "optional_inputs": [],
+          "outputs": [
+            "ci_evidence"
+          ],
+          "output_schema": null,
+          "acceptance_criteria": [
+            "Write only the fixed report after the original declaration is restored and accepted."
+          ],
+          "escalation_conditions": [
+            "Report unexpected results rather than claiming success."
+          ]
+        },
+        "authority": {
+          "authority_mode": "write_scoped",
+          "capabilities": [
+            "filesystem.write.scoped"
+          ],
+          "prohibited_capabilities": [],
+          "allowed_write_scopes": [
+            "artifacts/arc-shadow/result.json"
+          ],
+          "cannot": [
+            "grant_runtime_or_merge_permission"
+          ],
+          "may_delegate_to": [],
+          "reports_to": null,
+          "independence_requirements": []
+        },
+        "knowledge": {
+          "required_knowledge": [],
+          "optional_knowledge": [],
+          "repository_context": [],
+          "data_classification": [
+            "public"
+          ],
+          "retention_policy": "No runtime memory is created by this checker."
+        },
+        "reasoning": {
+          "reasoning_tier": "standard",
+          "max_turn_class": "normal",
+          "requires_independent_context": false
+        }
+      },
+      "body": "# ci-evidence-writer\n\nNew role declaration introduced by the internal CI trial in issue #18. The runner writes its own evidence report; this is not an existing SEO agent or an authenticated runtime identity.\n"
+    },
+    {
+      "contract": {
+        "id": "ci-evidence-reviewer",
+        "version": 1,
+        "scope": "repository",
+        "status": "active",
+        "aliases": [],
+        "mission": {
+          "objective": "Review the recorded trial evidence without editing it.",
+          "responsibilities": [
+            "Work only within the declared task."
+          ],
+          "out_of_scope": [
+            "Runtime execution is not provided by this package."
+          ],
+          "success_criteria": [
+            "Report evidence and unresolved items."
+          ]
+        },
+        "contract": {
+          "required_inputs": [
+            "scope"
+          ],
+          "optional_inputs": [],
+          "outputs": [
+            "review_findings"
+          ],
+          "output_schema": null,
+          "acceptance_criteria": [
+            "The task stays within its declared authority."
+          ],
+          "escalation_conditions": [
+            "Escalate when authority or acceptance evidence is insufficient."
+          ]
+        },
+        "authority": {
+          "authority_mode": "read_only",
+          "capabilities": [
+            "filesystem.read",
+            "review.perform"
+          ],
+          "prohibited_capabilities": [
+            "filesystem.write.scoped"
+          ],
+          "allowed_write_scopes": [],
+          "cannot": [
+            "approve_own_implementation"
+          ],
+          "may_delegate_to": [],
+          "reports_to": null,
+          "independence_requirements": [
+            "Review is a separate intended role; the checker does not prove that review occurred."
+          ]
+        },
+        "knowledge": {
+          "required_knowledge": [],
+          "optional_knowledge": [],
+          "repository_context": [],
+          "data_classification": [
+            "public"
+          ],
+          "retention_policy": "No runtime memory is created by this checker."
+        },
+        "reasoning": {
+          "reasoning_tier": "standard",
+          "max_turn_class": "normal",
+          "requires_independent_context": true
+        }
+      },
+      "body": "# ci-evidence-reviewer\n\nNew intended read-only review route for the internal trial. This declaration does not authenticate a reviewer or assert completed independent review.\n"
+    }
+  ],
+  "knowledge": [],
+  "routes": [
+    {
+      "task_type": "ci-evidence-report",
+      "accountable": "ci-evidence-writer",
+      "executors": [
+        "ci-evidence-writer"
+      ],
+      "reviewers": [
+        "ci-evidence-reviewer"
+      ],
+      "require_human_approval": false
+    }
+  ]
+}

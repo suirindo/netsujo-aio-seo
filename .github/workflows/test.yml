@@ -29,3 +29,34 @@ jobs:
         run: python3 scripts/test-contracts.py
       - name: Run visibility policy regressions
         run: python3 scripts/run-evals.py
+
+  arc-shadow-trial:
+    name: ARC shadow trial (non-blocking)
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    continue-on-error: true
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24.22.1'
+      - name: Install pinned checker without lifecycle scripts
+        run: npm --prefix experiments/arc-shadow ci --ignore-scripts --include=dev --no-audit --no-fund
+      - name: Test shadow runner
+        run: npm --prefix experiments/arc-shadow test
+      - name: Record raw valid, negative and restored results
+        env:
+          ARC_PR_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm --prefix experiments/arc-shadow run check
+      - name: Preserve trial evidence if produced
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: arc-shadow-trial-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/arc-shadow/result.json
+          if-no-files-found: warn
+          retention-days: 7

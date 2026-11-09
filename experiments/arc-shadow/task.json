@@ -1,0 +1,13 @@
+{
+  "schema_version": "0.1",
+  "id": "aio-arc-shadow-18-report",
+  "type": "ci-evidence-report",
+  "objective": "Write the results of the explicit new internal ARC CI trial to the fixed evidence file.",
+  "inputs": {
+    "scope": "artifacts/arc-shadow/result.json"
+  },
+  "acceptance_criteria": [
+    "Preserve raw exits and diagnostics.",
+    "Clearly separate a new internal trial from organic or external adoption."
+  ]
+}
